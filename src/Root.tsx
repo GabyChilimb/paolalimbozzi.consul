@@ -2,12 +2,22 @@ import { Composition, Folder } from "remotion";
 import { HelloWorld } from "./HelloWorld";
 import { Logo } from "./HelloWorld/Logo";
 import { Title } from "./HelloWorld/Title";
+import { Bioestimuladores, DURATION_SECONDS } from "./Bioestimuladores";
+import { FPS, HEIGHT, WIDTH } from "./Bioestimuladores/theme";
 
 // Each <Composition> is an entry in the sidebar!
 
 export const RemotionRoot: React.FC = () => {
   return (
     <>
+      <Composition
+        id="Bioestimuladores"
+        component={Bioestimuladores}
+        durationInFrames={Math.round(DURATION_SECONDS * FPS)}
+        fps={FPS}
+        width={WIDTH}
+        height={HEIGHT}
+      />
       <Folder name="Elements">
         <Composition
           id="Logo"

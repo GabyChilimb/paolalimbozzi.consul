@@ -52,3 +52,17 @@ Found an issue with Remotion? [File an issue here](https://github.com/remotion-d
 ## License
 
 Note that for some entities a company license is needed. [Read the terms here](https://github.com/remotion-dev/remotion/blob/main/LICENSE.md).
+
+## Reel "Bioestimuladores" (Paola Limbozzi Academy)
+
+Video vertical 1080×1920 hecho a partir del audio `public/bioestimuladores.m4a`.
+
+- `src/Bioestimuladores/transcript.ts`: transcripción con tiempos; editá acá los textos de los subtítulos.
+- `src/Bioestimuladores/index.tsx`: escenas y layout.
+- `src/Bioestimuladores/theme.ts`: colores y tipografías de `DESIGN.md`.
+
+Renderizar:
+
+```console
+npx remotion render Bioestimuladores out/bioestimuladores-reel.mp4
+```
