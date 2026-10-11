@@ -10,7 +10,13 @@ import {
 } from "remotion";
 import { Body, Card, Eyebrow, GoldDot, Headline, Scene, useAppear, useSeconds } from "./components";
 import { C, mono, sans, serif } from "./theme";
+import { GraphicsBackdrop, MotionGraphics } from "./graphics";
 import { PAGES, timeOf } from "./transcript";
+
+const Backdrop: React.FC = () => {
+  const t = useSeconds();
+  return <GraphicsBackdrop opacity={1 - photoOpacity(t)} />;
+};
 
 export const AUDIO_SECONDS = 85.91;
 export const DURATION_SECONDS = 87.5;
@@ -20,12 +26,43 @@ const STAGE_TOP = 960;
 const STAGE_H = 440;
 const CAPTION_TOP = 1500;
 
+// La foto ocupa la parte superior en la apertura y en el cierre; en el medio
+// van los motion graphics y Paola queda como avatar en el encabezado.
+const PHOTO_OUT = 4.9;
+const PHOTO_IN = 79.0;
+const photoOpacity = (t: number) =>
+  interpolate(t, [PHOTO_OUT, PHOTO_OUT + 0.5, PHOTO_IN, PHOTO_IN + 0.6], [1, 0, 0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+
+const Avatar: React.FC<{ size: number }> = ({ size }) => (
+  <div
+    style={{
+      width: size,
+      height: size,
+      borderRadius: size / 2,
+      border: `3px solid ${C.goldLight}`,
+      overflow: "hidden",
+      flexShrink: 0,
+      background: C.white,
+    }}
+  >
+    <Img
+      src={staticFile("paola.jpg")}
+      style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "60% 30%", transform: "scale(1.9)", transformOrigin: "60% 38%" }}
+    />
+  </div>
+);
+
 const Photo: React.FC = () => {
   const frame = useCurrentFrame();
-  const { durationInFrames } = useVideoConfig();
+  const { durationInFrames, fps } = useVideoConfig();
   const scale = interpolate(frame, [0, durationInFrames], [1.04, 1.16]);
+  const opacity = photoOpacity(frame / fps);
+  if (opacity === 0) return null;
   return (
-    <div style={{ position: "absolute", top: 0, left: 0, width: 1080, height: PHOTO_H, overflow: "hidden" }}>
+    <div style={{ position: "absolute", top: 0, left: 0, width: 1080, height: PHOTO_H, overflow: "hidden", opacity }}>
       <Img
         src={staticFile("paola.jpg")}
         style={{
@@ -84,10 +121,10 @@ const Brand: React.FC = () => {
         opacity: p,
       }}
     >
-      <Monogram size={78} />
+      <Avatar size={84} />
       <div style={{ fontFamily: mono, fontWeight: 500, color: C.ink, letterSpacing: "0.14em" }}>
-        <div style={{ fontSize: 24 }}>PAOLA LIMBOZZI ACADEMY</div>
-        <div style={{ fontSize: 18, color: C.text, marginTop: 6 }}>MEDICINA ESTÉTICA</div>
+        <div style={{ fontSize: 24 }}>DRA. PAOLA LIMBOZZI</div>
+        <div style={{ fontSize: 18, color: C.text, marginTop: 6 }}>ACADEMY · MEDICINA ESTÉTICA</div>
       </div>
     </div>
   );
@@ -365,6 +402,8 @@ export const Bioestimuladores: React.FC = () => {
   return (
     <AbsoluteFill style={{ background: C.cream }}>
       <Audio src={staticFile("bioestimuladores.m4a")} />
+      <Backdrop />
+      <MotionGraphics />
       <Photo />
       <Brand />
       <Stage />
