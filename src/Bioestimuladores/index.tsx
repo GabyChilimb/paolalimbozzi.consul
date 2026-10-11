@@ -1,7 +1,6 @@
 import React from "react";
 import {
   AbsoluteFill,
-  Audio,
   Img,
   interpolate,
   staticFile,
@@ -11,15 +10,17 @@ import {
 import { Body, Card, Eyebrow, GoldDot, Headline, Scene, useAppear, useSeconds } from "./components";
 import { C, mono, sans, serif } from "./theme";
 import { GraphicsBackdrop, MotionGraphics } from "./graphics";
-import { PAGES, timeOf } from "./transcript";
+import { Soundtrack } from "./sound";
+import { PAGES, T, timeOf, VOICE_SECONDS } from "./transcript";
 
 const Backdrop: React.FC = () => {
   const t = useSeconds();
   return <GraphicsBackdrop opacity={1 - photoOpacity(t)} />;
 };
 
-export const AUDIO_SECONDS = 85.91;
-export const DURATION_SECONDS = 87.5;
+// La placa final entra apenas termina la voz y queda unos segundos con música.
+export const END_CARD_AT = VOICE_SECONDS + 0.15;
+export const DURATION_SECONDS = END_CARD_AT + 3.2;
 
 const PHOTO_H = 1120;
 const STAGE_TOP = 960;
@@ -28,8 +29,8 @@ const CAPTION_TOP = 1500;
 
 // La foto ocupa la parte superior en la apertura y en el cierre; en el medio
 // van los motion graphics y Paola queda como avatar en el encabezado.
-const PHOTO_OUT = 4.9;
-const PHOTO_IN = 79.0;
+const PHOTO_OUT = T(4.9);
+const PHOTO_IN = T(79.0);
 const photoOpacity = (t: number) =>
   interpolate(t, [PHOTO_OUT, PHOTO_OUT + 0.5, PHOTO_IN, PHOTO_IN + 0.6], [1, 0, 0, 1], {
     extrapolateLeft: "clamp",
@@ -217,7 +218,7 @@ const Stage: React.FC = () => {
   return (
     <div style={{ position: "absolute", top: STAGE_TOP, left: 0, width: 1080, height: STAGE_H }}>
       {/* 1. Hook: los nombres de los bioestimuladores */}
-      <Scene from={0.4} to={5.0}>
+      <Scene from={T(0.4)} to={T(5.0)}>
         <Eyebrow>Bioestimuladores</Eyebrow>
         {[
           ["Hidroxiapatita", timeOf("Hidroxiapatita")],
@@ -229,14 +230,14 @@ const Stage: React.FC = () => {
       </Scene>
 
       {/* 2. La pregunta */}
-      <Scene from={5.1} to={9.5}>
-        <Headline parts={["¿Cuál es el ", { em: "mejor" }, " bioestimulador?"]} at={5.15} size={88} />
+      <Scene from={T(5.1)} to={T(9.5)}>
+        <Headline parts={["¿Cuál es el ", { em: "mejor" }, " bioestimulador?"]} at={T(5.15)} size={88} />
         <Body at={timeOf("Te", 7)}>Te cuento: no hay uno mejor.</Body>
       </Scene>
 
       {/* 3. Uno indicado para cada paciente + los 4 productos */}
-      <Scene from={9.6} to={18.6}>
-        <Headline parts={["Hay uno ", { em: "indicado" }, " para cada paciente"]} at={9.65} size={60} />
+      <Scene from={T(9.6)} to={T(18.6)}>
+        <Headline parts={["Hay uno ", { em: "indicado" }, " para cada paciente"]} at={T(9.65)} size={60} />
         <div
           style={{
             display: "grid",
@@ -253,8 +254,8 @@ const Stage: React.FC = () => {
       </Scene>
 
       {/* 4. Los papers */}
-      <Scene from={18.8} to={29.1}>
-        <Headline parts={["Papers donde uno ", { em: "le gana" }, " al otro"]} at={18.9} size={74} />
+      <Scene from={T(18.8)} to={T(29.1)}>
+        <Headline parts={["Papers donde uno ", { em: "le gana" }, " al otro"]} at={T(18.9)} size={74} />
         <div style={{ marginTop: 30 }}>
           <Bullet at={timeOf("Más", 18)}>Más colágeno</Bullet>
           <Bullet at={timeOf("menos", 18)}>Menos inflamación</Bullet>
@@ -263,33 +264,33 @@ const Stage: React.FC = () => {
       </Scene>
 
       {/* 5. Ojo: conflicto de intereses */}
-      <Scene from={ojo - 0.1} to={35.6}>
+      <Scene from={ojo - 0.1} to={T(35.6)}>
         <Headline parts={[{ em: "Ojo." }]} at={ojo} size={150} />
         <Headline parts={["Conflicto de intereses"]} at={timeOf("conflicto")} size={70} />
         <Body at={timeOf("Los", 30)}>Los financia la misma marca que vende el producto.</Body>
       </Scene>
 
       {/* 6. Estudios independientes */}
-      <Scene from={35.75} to={39.4}>
-        <Eyebrow at={35.8}>Lo que filtré</Eyebrow>
+      <Scene from={T(35.75)} to={T(39.4)}>
+        <Eyebrow at={T(35.8)}>Lo que filtré</Eyebrow>
         <Headline parts={["Solo estudios ", { em: "independientes" }]} at={timeOf("solo", 35)} size={86} />
       </Scene>
 
       {/* 7. Hidroxiapatita de calcio */}
-      <Scene from={39.5} to={49.5}>
+      <Scene from={T(39.5)} to={T(49.5)}>
         <Eyebrow>CaHA · Hidroxiapatita de calcio</Eyebrow>
         <Headline parts={["Regenera la matriz y da ", { em: "soporte estructural" }]} at={timeOf("regenerar")} size={72} />
         <Body at={timeOf("Por", 45)}>Ideal en pérdida de sostén profundo.</Body>
       </Scene>
 
       {/* 8. Ácido poli-L-láctico */}
-      <Scene from={49.6} to={55.4}>
+      <Scene from={T(49.6)} to={T(55.4)}>
         <Eyebrow>PLLA · Ácido poli-L-láctico</Eyebrow>
         <Headline parts={["Elasticidad y grosor de la piel, ", { em: "en forma progresiva" }]} at={timeOf("mejora", 49)} size={72} />
       </Scene>
 
       {/* 9. Reconstitución y granulomas */}
-      <Scene from={55.5} to={65.1}>
+      <Scene from={T(55.5)} to={T(65.1)}>
         <Eyebrow color={C.gold}>Atención</Eyebrow>
         <Headline parts={["Reconstitución ", { em: "al pie de la letra" }]} at={timeOf("respetar", 55)} size={78} />
         <Body at={timeOf("riesgo", 59)}>Si no, aparece el riesgo de granulomas.</Body>
@@ -299,25 +300,25 @@ const Stage: React.FC = () => {
       </Scene>
 
       {/* 10. La mitad del resultado */}
-      <Scene from={65.2} to={71.45}>
-        <Headline parts={["Elegir bien el producto es ", { em: "la mitad" }, " del resultado."]} at={65.35} size={74} />
+      <Scene from={T(65.2)} to={T(71.45)}>
+        <Headline parts={["Elegir bien el producto es ", { em: "la mitad" }, " del resultado."]} at={T(65.35)} size={74} />
         <Body at={timeOf("La", 68)} size={44}>
           La otra mitad es <b style={{ color: C.ink }}>tu mano y expertise.</b>
         </Body>
       </Scene>
 
       {/* 11. La técnica se entrena */}
-      <Scene from={71.5} to={79.1}>
-        <Headline parts={["La técnica ", { em: "se entrena." }]} at={71.55} size={92} />
+      <Scene from={T(71.5)} to={T(79.1)}>
+        <Headline parts={["La técnica ", { em: "se entrena." }]} at={T(71.55)} size={92} />
         <Body at={timeOf("En", 73)}>
           En la academia te formamos para planificar con <b style={{ color: C.teal }}>criterio y seguridad.</b>
         </Body>
       </Scene>
 
       {/* 12. CTA */}
-      <Scene from={79.15} to={DURATION_SECONDS}>
+      <Scene from={T(79.15)} to={DURATION_SECONDS}>
         <Eyebrow>Próximo curso</Eyebrow>
-        <Headline parts={["Escribime"]} at={79.2} size={96} />
+        <Headline parts={["Escribime"]} at={T(79.2)} size={96} />
         <CtaButton at={timeOf("BIOESTIMULADORES")} />
         <Body at={timeOf("y", 80)} size={38}>
           por mensaje y te mando la info del próximo curso.
@@ -354,7 +355,7 @@ const CtaButton: React.FC<{ at: number }> = ({ at }) => {
 // Cierre: tarjeta de marca sobre crema.
 const EndCard: React.FC = () => {
   const t = useSeconds();
-  const start = AUDIO_SECONDS - 1.6;
+  const start = END_CARD_AT;
   if (t < start) return null;
   const p = interpolate(t, [start, start + 0.6], [0, 1], { extrapolateRight: "clamp" });
   return (
@@ -401,7 +402,7 @@ const EndCard: React.FC = () => {
 export const Bioestimuladores: React.FC = () => {
   return (
     <AbsoluteFill style={{ background: C.cream }}>
-      <Audio src={staticFile("bioestimuladores.m4a")} />
+      <Soundtrack endCardAt={END_CARD_AT} />
       <Backdrop />
       <MotionGraphics />
       <Photo />

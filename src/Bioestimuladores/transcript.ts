@@ -1,8 +1,8 @@
 // Transcripción del audio (Whisper turbo + VAD), corregida a mano.
-// start/end en segundos. Si querés cambiar un texto, editalo acá.
+// start/end en segundos del audio ORIGINAL. Si querés cambiar un texto, editalo acá.
 export type Segment = { start: number; end: number; text: string };
 
-export const SEGMENTS: Segment[] = [
+export const RAW_SEGMENTS: Segment[] = [
   { start: 0.79, end: 4.76, text: "Hidroxiapatita, ácido poli-L-láctico, policaprolactona…" },
   { start: 5.24, end: 6.9, text: "¿Cuál es el mejor bioestimulador?" },
   { start: 7.32, end: 9.46, text: "Te cuento: no hay uno mejor." },
@@ -55,6 +55,42 @@ export const SEGMENTS: Segment[] = [
   },
 ];
 
+// Tramos del audio original que quedan después de cortar silencios.
+// Generado por tools/voz.py (mismo criterio que public/voz.wav).
+// 13 tramos, 80.03s (original 85.91s)
+export const KEEP: [number, number][] = [
+  [0.690, 4.900],
+  [5.140, 7.040],
+  [7.220, 18.410],
+  [18.800, 28.580],
+  [29.200, 35.460],
+  [35.730, 39.200],
+  [39.510, 45.410],
+  [45.620, 49.350],
+  [49.620, 55.300],
+  [55.440, 64.870],
+  [65.270, 73.250],
+  [73.490, 78.950],
+  [79.120, 84.160],
+];
+
+// Convierte un tiempo del audio original al tiempo del video ya editado.
+// Un tiempo que cae dentro de un silencio cortado se pega al corte.
+export const T = (orig: number): number => {
+  let acc = 0;
+  for (const [s, e] of KEEP) {
+    if (orig < s) return acc;
+    if (orig <= e) return acc + (orig - s);
+    acc += e - s;
+  }
+  return acc;
+};
+
+export const VOICE_SECONDS = KEEP.reduce((a, [s, e]) => a + e - s, 0);
+
+// Segmentos en el tiempo del video editado.
+export const SEGMENTS: Segment[] = RAW_SEGMENTS.map((s) => ({ ...s, start: T(s.start), end: T(s.end) }));
+
 export type Word = { text: string; start: number; end: number };
 
 // El reconocedor da tiempos por frase; repartimos cada frase entre sus
@@ -101,9 +137,11 @@ export const PAGES: Page[] = (() => {
 })();
 
 // Momento (en segundos) en que se dice una palabra, para sincronizar animaciones.
+// `after` va en segundos del audio original, como el resto de las marcas.
 export const timeOf = (needle: string, after = 0): number => {
   const n = needle.toLowerCase();
-  const w = WORDS.find((x) => x.start >= after && x.text.toLowerCase().startsWith(n));
+  const from = T(after);
+  const w = WORDS.find((x) => x.start >= from && x.text.toLowerCase().startsWith(n));
   if (!w) throw new Error(`Palabra no encontrada: ${needle} (después de ${after}s)`);
   return w.start;
 };

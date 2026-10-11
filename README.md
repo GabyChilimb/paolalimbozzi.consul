@@ -66,3 +66,11 @@ Renderizar:
 ```console
 npx remotion render Bioestimuladores out/bioestimuladores-reel.mp4
 ```
+
+### Sonido
+
+- `tools/voz.py`: limpia la voz (EQ, reducción de ruido, de-esser, compresión, -14 LUFS) y corta los silencios → `public/voz.wav`. Imprime la lista `KEEP` que va en `transcript.ts`.
+- `tools/sonido.py`: sintetiza los efectos (`public/sfx/`) y la música de fondo (`public/musica.m4a`).
+- `src/Bioestimuladores/sound.tsx`: dónde suena cada efecto y cómo baja la música cuando habla Paola.
+
+Los dos scripts usan `numpy`, `scipy` y `soundfile`, y necesitan `ffmpeg`.

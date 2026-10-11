@@ -3,7 +3,7 @@ import React from "react";
 import { Easing, interpolate, random } from "remotion";
 import { useSeconds } from "./components";
 import { C, mono, sans, serif } from "./theme";
-import { timeOf } from "./transcript";
+import { T, timeOf } from "./transcript";
 
 const VB_W = 1080;
 const VB_H = 720;
@@ -30,8 +30,8 @@ const Block: React.FC<{ from: number; to: number; children: (t: number) => React
   children,
 }) => {
   const t = useSeconds();
-  if (t < from - 0.05 || t > to + 0.45) return null;
-  const o = Math.min(prog(t, from, 0.5), 1 - prog(t, to, 0.4));
+  if (t < from - 0.05 || t > to + 0.3) return null;
+  const o = Math.min(prog(t, from + 0.1, 0.5), 1 - prog(t, to - 0.05, 0.25));
   const s = 0.94 + 0.06 * prog(t, from, 0.7);
   return (
     <svg
@@ -62,10 +62,10 @@ const PRODUCTS = [
 ];
 
 const Orbit: React.FC = () => {
-  const from = 5.0;
+  const from = T(5.0);
   const patient = timeOf("indicado");
   return (
-    <Block from={from} to={18.6}>
+    <Block from={from} to={T(18.6)}>
       {(t) => {
         const cx = 540;
         const cy = 360;
@@ -127,11 +127,11 @@ const Papers: React.FC = () => {
     { label: "Remodelación", at: timeOf("mejor", 18), from: 0.3, to: 0.8, color: C.teal, arrow: "↑" },
   ];
   return (
-    <Block from={18.75} to={29.0}>
+    <Block from={T(18.75)} to={T(29.0)}>
       {(t) => (
         <g>
           {[0, 1, 2].map((i) => {
-            const p = prog(t, 18.9 + i * 0.25, 0.7);
+            const p = prog(t, T(18.9) + i * 0.25, 0.7);
             const x = 120 + i * 26;
             const y = 120 + i * 22 - (1 - p) * 300;
             return (
@@ -226,9 +226,9 @@ const Eye: React.FC = () => {
 /* ───────────── 4. Filtro: solo estudios independientes ───────────── */
 
 const Funnel: React.FC = () => {
-  const from = 35.65;
+  const from = T(35.65);
   return (
-    <Block from={from} to={39.35}>
+    <Block from={from} to={T(39.35)}>
       {(t) => {
         const dots = Array.from({ length: 26 }, (_, i) => i);
         return (
@@ -245,7 +245,7 @@ const Funnel: React.FC = () => {
               const fade = passes ? 1 : interpolate(k, [0.9, 1.3], [1, 0], clamp);
               return <circle key={i} cx={x} cy={y} r={14} fill={passes && k > 0.7 ? C.gold : C.goldMuted} opacity={fade} />;
             })}
-            <g opacity={prog(t, 37.6, 0.4)} transform={`translate(700 610) scale(${Math.min(1.1, pop(t, 37.6))})`}>
+            <g opacity={prog(t, T(37.6), 0.4)} transform={`translate(700 610) scale(${Math.min(1.1, pop(t, T(37.6)))})`}>
               <circle r={44} fill={C.teal} />
               <path d="M -18 0 L -4 14 L 20 -12" fill="none" stroke={C.white} strokeWidth={8} strokeLinecap="round" strokeLinejoin="round" />
             </g>
@@ -259,7 +259,7 @@ const Funnel: React.FC = () => {
 /* ───────────── 5. Corte de piel: CaHA (soporte) y PLLA (grosor) ───────────── */
 
 const Skin: React.FC = () => {
-  const from = 39.45;
+  const from = T(39.45);
   const spheres = timeOf("hidroxiapatita", 39);
   const regen = timeOf("regenerar");
   const soporte = timeOf("soporte");
@@ -268,7 +268,7 @@ const Skin: React.FC = () => {
   const mejora = timeOf("mejora");
   const progresiva = timeOf("progresiva");
   return (
-    <Block from={from} to={55.4}>
+    <Block from={from} to={T(55.4)}>
       {(t) => {
         const L = 90;
         const R = 990;
@@ -359,7 +359,7 @@ const Skin: React.FC = () => {
 /* ───────────── 6. Reconstitución + riesgo de granulomas ───────────── */
 
 const Reconstitution: React.FC = () => {
-  const from = 55.5;
+  const from = T(55.5);
   const risk = timeOf("riesgo", 59);
   const steps = [
     { text: "Volumen exacto", at: timeOf("respetar", 55) + 0.6 },
@@ -367,7 +367,7 @@ const Reconstitution: React.FC = () => {
     { text: "Homogeneizar", at: timeOf("reconstitución", 55) + 0.2 },
   ];
   return (
-    <Block from={from} to={65.1}>
+    <Block from={from} to={T(65.1)}>
       {(t) => {
         const fill = prog(t, from + 0.3, 3.2);
         const plunger = prog(t, from + 0.3, 3.2);
@@ -430,7 +430,7 @@ const Half: React.FC = () => {
   const a = timeOf("mitad", 65);
   const b = timeOf("otra", 68);
   return (
-    <Block from={65.2} to={71.4}>
+    <Block from={T(65.2)} to={T(71.4)}>
       {(t) => {
         const r = 230;
         const cx = 540;
@@ -470,7 +470,7 @@ const Half: React.FC = () => {
 /* ───────────── 8. Curva de aprendizaje ───────────── */
 
 const Learning: React.FC = () => {
-  const from = 71.45;
+  const from = T(71.45);
   const crit = timeOf("criterio");
   const seg = timeOf("seguridad");
   const pts = [
@@ -483,7 +483,7 @@ const Learning: React.FC = () => {
   ];
   const d = `M ${pts[0][0]} ${pts[0][1]} ` + pts.slice(1).map(([x, y]) => `L ${x} ${y}`).join(" ");
   return (
-    <Block from={from} to={79.1}>
+    <Block from={from} to={T(79.1)}>
       {(t) => {
         const draw = prog(t, from + 0.3, 3.0);
         return (
