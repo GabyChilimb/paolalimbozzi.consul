@@ -1,8 +1,8 @@
 """Genera los efectos de sonido y la música de fondo por síntesis (sin samples
 de terceros, así no hay temas de licencias).
 
-Uso: python tools/sonido.py <carpeta public>
-Crea public/sfx/*.wav y public/musica.wav
+Uso: python tools/sonido.py <carpeta public>              → public/sfx/*.wav y public/musica.m4a
+     python tools/sonido.py <carpeta public> trayectoria  → public/trayectoria/musica.m4a
 """
 import os, sys
 import numpy as np
@@ -191,19 +191,28 @@ def sting():
 # ───────────────────────── Música ─────────────────────────
 
 
-def music(total=90.0, bpm=92):
+# D: Dmaj9 – Bm7 – Gmaj7 – Asus4/A
+CHORDS_D = [
+    [50, 57, 61, 64, 66],
+    [47, 54, 57, 62, 66],
+    [43, 50, 54, 59, 62],
+    [45, 52, 57, 62, 64],
+]
+# C: Cmaj9 – Am7 – Fmaj7 – Gsus4 (más luminoso, para el video de trayectoria)
+CHORDS_C = [
+    [48, 55, 59, 62, 64],
+    [45, 52, 55, 60, 64],
+    [41, 48, 52, 57, 60],
+    [43, 50, 55, 60, 62],
+]
+
+
+def music(total=90.0, bpm=92, chords=CHORDS_D):
     beat = 60 / bpm
     bar = beat * 4
     n = int(total * SR)
     L = np.zeros((n, 2))
     pads = np.zeros((n, 2))
-    # D: Dmaj9 – Bm7 – Gmaj7 – Asus4/A
-    chords = [
-        [50, 57, 61, 64, 66],
-        [47, 54, 57, 62, 66],
-        [43, 50, 54, 59, 62],
-        [45, 52, 57, 62, 64],
-    ]
     bars = int(total / bar) + 1
 
     def add(buf, start, x):
@@ -274,7 +283,18 @@ def music(total=90.0, bpm=92):
     return mix
 
 
-if __name__ == "__main__":
+def save_music(path, m):
+    import subprocess, tempfile
+    with tempfile.TemporaryDirectory() as d:
+        wav = os.path.join(d, "m.wav")
+        sf.write(wav, np.clip(m, -1, 1).astype(np.float32), SR)
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", wav, "-c:a", "aac", "-b:a", "192k", path], check=True)
+
+
+if __name__ == "__main__" and len(sys.argv) > 2 and sys.argv[2] == "trayectoria":
+    save_music(os.path.join(OUT, "trayectoria", "musica.m4a"), music(total=82.0, bpm=96, chords=CHORDS_C))
+    print("ok")
+elif __name__ == "__main__":
     save("whoosh.wav", whoosh())
     save("pop.wav", pop())
     save("pop-alto.wav", pop(700, 1400))
@@ -285,6 +305,5 @@ if __name__ == "__main__":
     save("warn.wav", warn())
     save("riser.wav", riser())
     save("sting.wav", sting())
-    m = music()
-    sf.write(os.path.join(OUT, "musica.wav"), np.clip(m, -1, 1).astype(np.float32), SR)
+    save_music(os.path.join(OUT, "musica.m4a"), music())
     print("ok")

@@ -74,3 +74,17 @@ npx remotion render Bioestimuladores out/bioestimuladores-reel.mp4
 - `src/Bioestimuladores/sound.tsx`: dónde suena cada efecto y cómo baja la música cuando habla Paola.
 
 Los dos scripts usan `numpy`, `scipy` y `soundfile`, y necesitan `ffmpeg`.
+
+## Reel "Trayectoria" (presentación de la Dra. Paola Limbozzi)
+
+Video vertical 1080×1920 hecho a partir del video de Paola hablando (`public/trayectoria/paola.mp4`, ya corregido de 1080×1080 anamórfico a 9:16), el clip del curso en Estética Mundial (`curso.mp4`) y la foto del público (`publico.jpg`).
+
+- `src/Trayectoria/transcript.ts`: textos de los subtítulos y tramos que quedan tras cortar silencios (`KEEP`).
+- `src/Trayectoria/index.tsx`: cortes con zoom, títulos, tarjetas, pantallas de gráficos, Instagram y cierre.
+- `src/Trayectoria/sfx.ts`: efectos de sonido.
+- Voz: `python tools/voz.py <video original> public/trayectoria/voz.wav src/Trayectoria/transcript.ts ruidosa`
+- Música: `python tools/sonido.py public trayectoria`
+
+```console
+npx remotion render Trayectoria out/trayectoria-reel.mp4
+```

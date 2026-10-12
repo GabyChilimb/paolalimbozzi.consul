@@ -1,42 +1,64 @@
 """Limpia la voz y corta los silencios.
 
-Uso: python tools/voz.py <audio original> <salida.wav>
-Imprime la lista KEEP (tramos conservados, en segundos del audio original)
-para pegar en src/Bioestimuladores/transcript.ts.
+Uso: python tools/voz.py <audio o video original> <salida.wav> [transcript.ts] [perfil]
+  perfil: "limpia" (grabación buena, retoques suaves) o "ruidosa" (más
+  limpieza de graves/ruido y más presencia).
+Imprime la lista KEEP (tramos conservados, en segundos del audio original,
+alineados a cuadros de 30 fps) para pegar en el transcript.ts.
 """
 import json, re, subprocess, sys, tempfile, os
 import numpy as np, soundfile as sf
 
 SRC, OUT = sys.argv[1], sys.argv[2]
+TRANSCRIPT = sys.argv[3] if len(sys.argv) > 3 else "src/Bioestimuladores/transcript.ts"
+PERFIL = sys.argv[4] if len(sys.argv) > 4 else "limpia"
 PRE, POST, MIN_GAP = 0.10, 0.14, 0.08
+FPS = 30
 SR = 48000
 
 # Tramos con voz: los mismos tiempos que SEGMENTS en transcript.ts.
-ts = open(os.path.join(os.path.dirname(__file__), "..", "src/Bioestimuladores/transcript.ts")).read()
+ts = open(TRANSCRIPT).read()
 raw = ts[ts.index("RAW_SEGMENTS"):ts.index("];", ts.index("RAW_SEGMENTS"))]
 segs = [(float(a), float(b)) for a, b in re.findall(r"start: ([\d.]+),\s*end: ([\d.]+)", raw)]
 
 keep = []
+# Bordes alineados a cuadros para que los cortes de video y audio coincidan.
+snap = lambda x: round(x * FPS) / FPS
 for s, e in segs:
-    a, b = max(0.0, s - PRE), e + POST
+    a, b = max(0.0, snap(s - PRE)), snap(e + POST)
     if keep and a - keep[-1][1] < MIN_GAP:
         keep[-1][1] = b
     else:
         keep.append([a, b])
 
 # 1) Mejora de voz sobre el audio completo.
-chain = ",".join([
-    "highpass=f=85:poles=2",
-    "afftdn=nr=8:nf=-50:tn=1",
-    "equalizer=f=250:t=q:w=1.2:g=-2.5",
-    "equalizer=f=3500:t=q:w=1.0:g=3",
-    "highshelf=f=9000:g=2.5",
-    "deesser=i=0.35:m=0.5:f=0.5",
-    "acompressor=threshold=-22dB:ratio=3:attack=6:release=90:makeup=2",
-])
+PERFILES = {
+    "limpia": [
+        "highpass=f=85:poles=2",
+        "afftdn=nr=8:nf=-50:tn=1",
+        "equalizer=f=250:t=q:w=1.2:g=-2.5",
+        "equalizer=f=3500:t=q:w=1.0:g=3",
+        "highshelf=f=9000:g=2.5",
+        "deesser=i=0.35:m=0.5:f=0.5",
+        "acompressor=threshold=-22dB:ratio=3:attack=6:release=90:makeup=2",
+    ],
+    "ruidosa": [
+        "volume=14dB",
+        "highpass=f=110:poles=2",
+        "highpass=f=90:poles=2",
+        "afftdn=nr=14:nf=-40:tn=1",
+        "equalizer=f=220:t=q:w=1.0:g=-3.5",
+        "equalizer=f=3200:t=q:w=1.0:g=5",
+        "equalizer=f=6000:t=q:w=1.2:g=3",
+        "highshelf=f=9500:g=3",
+        "deesser=i=0.4:m=0.5:f=0.5",
+        "acompressor=threshold=-24dB:ratio=3.5:attack=5:release=90:makeup=2",
+    ],
+}
+chain = ",".join(PERFILES[PERFIL])
 with tempfile.TemporaryDirectory() as d:
     clean = os.path.join(d, "clean.wav")
-    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", SRC, "-af", chain, "-ar", str(SR), "-ac", "1", clean], check=True)
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", SRC, "-vn", "-af", chain, "-ar", str(SR), "-ac", "1", clean], check=True)
     a, sr = sf.read(clean)
     keep[-1][1] = min(keep[-1][1], len(a) / sr)
 
