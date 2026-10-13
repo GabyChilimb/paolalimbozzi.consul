@@ -435,10 +435,10 @@ const CtaButton: React.FC<{ at: number }> = ({ at }) => {
 
 const CONGRESOS = [
   { name: "Congreso Mundial de Estética", word: "Congreso" },
-  { name: "Mendoza Estética", word: "Mendoza" },
+  { name: "Mendoza Esthetic", word: "Mendoza" },
   { name: "ACAOFAR", word: "ACAOFAR" },
   { name: "Congreso Estética Mundial", word: "Congreso", after: 25 },
-  { name: "CEMAL Madrid", word: "CEMAL" },
+  { name: "Semal Madrid", word: "Semal" },
 ];
 
 const FramedMedia: React.FC<{ at: number; w: number; h: number; children: React.ReactNode; label?: string }> = ({

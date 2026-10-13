@@ -12,7 +12,7 @@ export const RAW_SEGMENTS: Segment[] = [
   {
     start: 21.37,
     end: 28.6,
-    text: "Participé en espacios como el Congreso Mundial de Estética, Mendoza Estética, ACAOFAR, Congreso Estética Mundial y CEMAL Madrid.",
+    text: "Participé en espacios como el Congreso Mundial de Estética, Mendoza Esthetic, ACAOFAR, Congreso Estética Mundial y Semal Madrid.",
   },
   {
     start: 30.19,

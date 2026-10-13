@@ -13,7 +13,7 @@ export const sfxEvents = (endCardAt: number): SfxEvent[] => [
     ["Mendoza", 21],
     ["ACAOFAR", 21],
     ["Congreso", 25],
-    ["CEMAL", 21],
+    ["Semal", 21],
   ].map(([w, after]) => ({ at: timeOf(w as string, after as number), sfx: "pop" as const, volume: 0.35 })),
   { at: T(28.7) - 0.1, sfx: "whoosh", volume: 0.3 },
   // Comité científico
