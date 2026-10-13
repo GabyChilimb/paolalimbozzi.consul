@@ -88,3 +88,16 @@ Video vertical 1080×1920 hecho a partir del video de Paola hablando (`public/tr
 ```console
 npx remotion render Trayectoria out/trayectoria-reel.mp4
 ```
+
+## Reel "Medida justa" (Drive: Cónsul / Video 2)
+
+Los clips 1–5 de la carpeta, convertidos a MP4 1080×1920 (venían 9:16 anamórfico a 120 fps) y unidos en orden en `public/video2/fuente.mp4`.
+
+- `src/MedidaJusta/transcript.ts`: textos y cortes de silencio.
+- `src/MedidaJusta/index.tsx`: cortes con zoom, títulos, "≠", medidor, mira sobre la mejilla, "se nota", CTA y cierre; efectos en `sfx()`.
+- Voz: `python tools/voz.py <audio unido> public/video2/voz.wav src/MedidaJusta/transcript.ts media`
+- Música: `python tools/sonido.py public video2`
+
+```console
+npx remotion render MedidaJusta out/medida-justa-reel.mp4
+```

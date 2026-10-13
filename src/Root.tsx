@@ -5,12 +5,21 @@ import { Title } from "./HelloWorld/Title";
 import { Bioestimuladores, DURATION_SECONDS } from "./Bioestimuladores";
 import { FPS, HEIGHT, WIDTH } from "./Bioestimuladores/theme";
 import { DURATION_SECONDS as TRAYECTORIA_SECONDS, Trayectoria } from "./Trayectoria";
+import { DURATION_SECONDS as MEDIDA_SECONDS, MedidaJusta } from "./MedidaJusta";
 
 // Each <Composition> is an entry in the sidebar!
 
 export const RemotionRoot: React.FC = () => {
   return (
     <>
+      <Composition
+        id="MedidaJusta"
+        component={MedidaJusta}
+        durationInFrames={Math.round(MEDIDA_SECONDS * FPS)}
+        fps={FPS}
+        width={WIDTH}
+        height={HEIGHT}
+      />
       <Composition
         id="Trayectoria"
         component={Trayectoria}

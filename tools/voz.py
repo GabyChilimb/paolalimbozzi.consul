@@ -1,7 +1,7 @@
 """Limpia la voz y corta los silencios.
 
 Uso: python tools/voz.py <audio o video original> <salida.wav> [transcript.ts] [perfil]
-  perfil: "limpia" (grabación buena, retoques suaves) o "ruidosa" (más
+  perfil: "limpia" (grabación buena, retoques suaves), "media" o "ruidosa" (más
   limpieza de graves/ruido y más presencia).
 Imprime la lista KEEP (tramos conservados, en segundos del audio original,
 alineados a cuadros de 30 fps) para pegar en el transcript.ts.
@@ -40,6 +40,17 @@ PERFILES = {
         "equalizer=f=3500:t=q:w=1.0:g=3",
         "highshelf=f=9000:g=2.5",
         "deesser=i=0.35:m=0.5:f=0.5",
+        "acompressor=threshold=-22dB:ratio=3:attack=6:release=90:makeup=2",
+    ],
+    "media": [
+        "volume=6dB",
+        "highpass=f=100:poles=2",
+        "afftdn=nr=10:nf=-45:tn=1",
+        "equalizer=f=220:t=q:w=1.0:g=-3",
+        "equalizer=f=3200:t=q:w=1.0:g=4",
+        "equalizer=f=6000:t=q:w=1.2:g=2.5",
+        "highshelf=f=9500:g=3",
+        "deesser=i=0.4:m=0.5:f=0.5",
         "acompressor=threshold=-22dB:ratio=3:attack=6:release=90:makeup=2",
     ],
     "ruidosa": [

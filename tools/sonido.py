@@ -3,6 +3,7 @@ de terceros, así no hay temas de licencias).
 
 Uso: python tools/sonido.py <carpeta public>              → public/sfx/*.wav y public/musica.m4a
      python tools/sonido.py <carpeta public> trayectoria  → public/trayectoria/musica.m4a
+     python tools/sonido.py <carpeta public> video2       → public/video2/musica.m4a
 """
 import os, sys
 import numpy as np
@@ -293,6 +294,9 @@ def save_music(path, m):
 
 if __name__ == "__main__" and len(sys.argv) > 2 and sys.argv[2] == "trayectoria":
     save_music(os.path.join(OUT, "trayectoria", "musica.m4a"), music(total=82.0, bpm=96, chords=CHORDS_C))
+    print("ok")
+elif __name__ == "__main__" and len(sys.argv) > 2 and sys.argv[2] == "video2":
+    save_music(os.path.join(OUT, "video2", "musica.m4a"), music(total=24.0, bpm=104, chords=CHORDS_D))
     print("ok")
 elif __name__ == "__main__":
     save("whoosh.wav", whoosh())
