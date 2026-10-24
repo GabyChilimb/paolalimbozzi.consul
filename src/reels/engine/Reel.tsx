@@ -367,7 +367,7 @@ const Captions: React.FC<{ cfg: ReelConfig; look: Look; hide: (t: number) => boo
     transform: `translateY(${(1 - enter) * 14}px)`,
   };
   const words = page.words.map((w, i) => {
-    const active = t >= w.start && t < w.end + 0.05;
+    const active = t >= w.start && t < (page.words[i + 1]?.start ?? w.end + 0.05);
     const key = isKey(w.text);
     if (look.captions === "marker") {
       return (
@@ -384,7 +384,7 @@ const Captions: React.FC<{ cfg: ReelConfig; look: Look; hide: (t: number) => boo
       );
     }
     return (
-      <span key={i} style={{ color: active ? look.marker : key ? look.accent : "#FFFFFF", display: "inline-block", transform: active ? "scale(1.08)" : undefined }}>
+      <span key={i} style={{ color: active ? look.marker : key ? look.accent : "#FFFFFF" }}>
         {w.text}
       </span>
     );
@@ -570,6 +570,7 @@ const CalloutView: React.FC<{ w: Win; look: Look; cfg: ReelConfig }> = ({ w, loo
           <div style={{ marginTop: c.title ? 16 : 0 }}>
             {c.items.map((it, i) => {
               const ia = at(it.at);
+              if (t < ia - 0.05) return null;
               const p = springy(t, ia);
               return (
                 <div

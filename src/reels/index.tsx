@@ -6,10 +6,11 @@ import { consul1 } from "./configs/consul-1";
 import { consul2 } from "./configs/consul-2";
 import { consul3 } from "./configs/consul-3";
 import { consul4 } from "./configs/consul-4";
+import { consul5 } from "./configs/consul-5";
 import { END_HOLD, Reel } from "./engine/Reel";
 import { ReelConfig } from "./engine/types";
 
-export const REELS: ReelConfig[] = [consul1, consul2, consul3, consul4];
+export const REELS: ReelConfig[] = [consul1, consul2, consul3, consul4, consul5];
 
 const ReelById: React.FC<{ id: string }> = ({ id }) => <Reel cfg={REELS.find((r) => r.id === id)!} />;
 
