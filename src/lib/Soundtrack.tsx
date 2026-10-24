@@ -2,7 +2,7 @@ import React from "react";
 import { Audio, interpolate, Sequence, staticFile, useVideoConfig } from "remotion";
 import { Segment } from "./timeline";
 
-export type Sfx = "whoosh" | "pop" | "pop-alto" | "tick" | "ding" | "coin" | "impact" | "warn" | "riser" | "sting";
+export type Sfx = string;
 export type SfxEvent = { at: number; sfx: Sfx; volume: number };
 
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
@@ -15,7 +15,8 @@ export const Soundtrack: React.FC<{
   events: SfxEvent[];
   underVoice?: number;
   open?: number;
-}> = ({ voice, music, segments, events, underVoice = 0.16, open = 0.45 }) => {
+  sfxDir?: string;
+}> = ({ voice, music, segments, events, underVoice = 0.16, open = 0.45, sfxDir = "sfx" }) => {
   const { fps, durationInFrames } = useVideoConfig();
   const duration = durationInFrames / fps;
 
@@ -44,8 +45,8 @@ export const Soundtrack: React.FC<{
       <Audio src={staticFile(voice)} />
       <Audio src={staticFile(music)} volume={(f) => musicVolume(f / fps)} />
       {events.map((e, i) => (
-        <Sequence key={i} from={Math.max(0, Math.round(e.at * fps))} durationInFrames={Math.round(3 * fps)} layout="none">
-          <Audio src={staticFile(`sfx/${e.sfx}.wav`)} volume={e.volume} />
+        <Sequence key={i} from={Math.max(0, Math.round(e.at * fps))} durationInFrames={Math.round(4 * fps)} layout="none">
+          <Audio src={staticFile(`${sfxDir}/${e.sfx}.wav`)} volume={e.volume} />
         </Sequence>
       ))}
     </>

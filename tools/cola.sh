@@ -1,0 +1,3 @@
+#!/bin/bash
+# Exporta varios reels en fila: tools/cola.sh Id1:salida1 Id2:salida2 ...
+for x in "$@"; do id=${x%%:*}; out=${x#*:}; echo "== $id $(date +%T)"; tools/exportar.sh "$id" "$out" || echo "FAIL $id"; done; echo COLA-OK

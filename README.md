@@ -101,3 +101,24 @@ Los clips 1–5 de la carpeta, convertidos a MP4 1080×1920 (venían 9:16 anamó
 ```console
 npx remotion render MedidaJusta out/medida-justa-reel.mp4
 ```
+
+## Reels en serie (Cónsul y Academy)
+
+Motor genérico en `src/reels/`: cada video es un archivo de config en `src/reels/configs/` (textos, estilo, títulos, destacados y CTA) y se registra en `src/reels/index.tsx`.
+
+- Estilos (`src/reels/engine/styles.ts`): `clinica`, `editorial`, `pop`, `noche`, `anotador`, `academia`, `bruja`, `calido`. Cada uno define tipografía, paleta, subtítulos, zooms, transición de corte, efectos visuales y sonidos.
+- Destacados (`callouts`): `big`, `card`, `stamp`, `list`, `number`, `quote`, `lower`, `versus`, `note`, `target`.
+- Instagram de cada grupo: `src/reels/handles.ts`.
+
+Flujo por video:
+
+```console
+python tools/preparar.py <slug> <trabajo> <modelos> clip1 clip2 ...   # 1080×1920, une y transcribe
+# escribir src/reels/configs/<slug>.ts con el texto corregido
+python tools/finalizar.py <slug> <trabajo>                            # voz, cortes (KEEP) y música
+tools/exportar.sh <Id> out/reels/<archivo>.mp4                         # render + limitador
+```
+
+- Efectos de sonido: `python tools/banco_sonido.py sfx` → `public/sfx2/`, normalizados a −16 LUFS de pico momentáneo (≈2 puntos debajo de la voz, que va a −14 LUFS).
+- Música: `python tools/banco_sonido.py musica <preset> <segundos> <salida> [semilla]`; presets `suave`, `luminoso`, `pop`, `lofi`, `academy`, `oscuro`, `tension`.
+- Los videos fuente (`public/reels/`) no se suben al repositorio por su tamaño.

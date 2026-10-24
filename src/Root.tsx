@@ -6,12 +6,14 @@ import { Bioestimuladores, DURATION_SECONDS } from "./Bioestimuladores";
 import { FPS, HEIGHT, WIDTH } from "./Bioestimuladores/theme";
 import { DURATION_SECONDS as TRAYECTORIA_SECONDS, Trayectoria } from "./Trayectoria";
 import { DURATION_SECONDS as MEDIDA_SECONDS, MedidaJusta } from "./MedidaJusta";
+import { ReelCompositions } from "./reels";
 
 // Each <Composition> is an entry in the sidebar!
 
 export const RemotionRoot: React.FC = () => {
   return (
     <>
+      <ReelCompositions />
       <Composition
         id="MedidaJusta"
         component={MedidaJusta}
