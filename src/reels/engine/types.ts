@@ -35,6 +35,8 @@ export type ReelConfig = {
   title: string; // nombre del archivo final
   dir: string; // carpeta en public/reels
   style: StyleName;
+  // Ajustes de color/tipografía sobre el estilo base (para variar entre videos).
+  lookOverride?: Record<string, unknown>;
   face?: { x: number; y: number }; // origen de los zooms, en % del cuadro
   handle: string;
   raw: Segment[];

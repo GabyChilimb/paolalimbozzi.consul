@@ -44,7 +44,8 @@ export const useReel = (cfg: ReelConfig) =>
       const c = cfg.callouts[i];
       const from = starts[i];
       const next = k + 1 < order.length ? starts[order[k + 1]] : ctaAt;
-      const to = c.to !== undefined ? at(c.to) : Math.min(next - 0.05, from + 3.4, ctaAt - 0.05);
+      const maxDur = c.kind === "big" ? 2.6 : c.kind === "stamp" ? 2.2 : 3.4;
+      const to = c.to !== undefined ? at(c.to) : Math.min(next - 0.05, from + maxDur, ctaAt - 0.05);
       return { c, from, to: Math.max(to, from + 0.8) };
     });
     const hookTo = cfg.hook.to !== undefined ? at(cfg.hook.to) : Math.min(tl.SEGMENTS[0].end + 0.2, (wins[0]?.from ?? 99) - 0.05);
@@ -880,7 +881,7 @@ const buildSfx = (cfg: ReelConfig, look: Look, r: ReturnType<typeof useReel>): S
 /* ───────────── Composición ───────────── */
 
 export const Reel: React.FC<{ cfg: ReelConfig }> = ({ cfg }) => {
-  const look = LOOKS[cfg.style];
+  const look = { ...LOOKS[cfg.style], ...(cfg.lookOverride as Partial<Look>) } as Look;
   const r = useReel(cfg);
   const emphasis = r.wins.filter((w) => w.c.kind === "big" || w.c.kind === "stamp").map((w) => w.from);
   // Los subtítulos se ocultan con las frases "big" y, en el estilo pop (subtítulo
