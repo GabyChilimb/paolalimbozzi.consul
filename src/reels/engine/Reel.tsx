@@ -505,7 +505,7 @@ const Icon: React.FC<{ kind: "check" | "cross" | "alert" | "heart" | "star"; col
   </svg>
 );
 
-const TOP = { position: "absolute" as const, top: 190, left: 0, right: 0, height: 560, display: "flex", flexDirection: "column" as const, alignItems: "center", justifyContent: "flex-start" };
+const TOP_ZONE = { position: "absolute" as const, top: 190, left: 0, right: 0, height: 560, display: "flex", flexDirection: "column" as const, alignItems: "center", justifyContent: "flex-start" };
 const LOWER = { position: "absolute" as const, top: 1020, left: 0, right: 0, height: 360, display: "flex", flexDirection: "column" as const, alignItems: "center", justifyContent: "flex-end" };
 
 const CalloutView: React.FC<{ w: Win; look: Look; cfg: ReelConfig }> = ({ w, look, cfg }) => {
@@ -514,6 +514,7 @@ const CalloutView: React.FC<{ w: Win; look: Look; cfg: ReelConfig }> = ({ w, loo
   const { c, from, to } = w;
   if (t < from - 0.05 || t > to + 0.35) return null;
   const out = 1 - prog(t, to, 0.3);
+  const TOP = { ...TOP_ZONE, top: cfg.zones?.top ?? TOP_ZONE.top };
   const ink = look.cardInk;
   const wrap = (style: React.CSSProperties, node: React.ReactNode) => <div style={{ ...style, opacity: out }}>{node}</div>;
 
@@ -731,7 +732,7 @@ const Hook: React.FC<{ cfg: ReelConfig; look: Look }> = ({ cfg, look }) => {
             : "linear-gradient(to bottom, rgba(251,249,245,.92), rgba(251,249,245,.6) 55%, rgba(251,249,245,0))",
         }}
       />
-      <div style={{ ...TOP, top: 210 }}>
+      <div style={{ ...TOP_ZONE, top: cfg.zones?.hook ?? 210 }}>
         {cfg.hook.eyebrow && <Eyebrow text={cfg.hook.eyebrow} look={look} at={0.1} color={darkBg ? look.accent : look.ink} />}
         <TitleText parts={cfg.hook.parts} at={0.15} look={look} size={look.titleUpper ? 112 : 92} color={darkBg ? "#FFFFFF" : look.ink} stagger={0.08} />
       </div>

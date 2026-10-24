@@ -38,6 +38,8 @@ export type ReelConfig = {
   // Ajustes de color/tipografía sobre el estilo base (para variar entre videos).
   lookOverride?: Record<string, unknown>;
   face?: { x: number; y: number }; // origen de los zooms, en % del cuadro
+  // Posición vertical (px) de las zonas de gráficos si la cara queda en el medio.
+  zones?: { hook?: number; top?: number };
   handle: string;
   raw: Segment[];
   keep: [number, number][];
