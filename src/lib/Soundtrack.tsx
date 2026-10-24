@@ -21,7 +21,8 @@ export const Soundtrack: React.FC<{
   const duration = durationInFrames / fps;
 
   // Tramos con voz, uniendo pausas cortas para que la música no "bombee".
-  const speech = segments.reduce<[number, number][]>((acc, s) => {
+  // (los tramos sin texto, como reacciones mudas, no bajan la música)
+  const speech = segments.filter((s) => s.text.trim()).reduce<[number, number][]>((acc, s) => {
     const last = acc[acc.length - 1];
     if (last && s.start - last[1] < 0.7) last[1] = s.end;
     else acc.push([s.start, s.end]);

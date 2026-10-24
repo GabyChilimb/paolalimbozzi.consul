@@ -10,6 +10,6 @@ npx remotion render "$ID" "$TMP" --browser-executable="$BROWSER" --concurrency=4
 DUR=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$TMP")
 MAXK=$(python3 -c "print(min(7000, int(88*8*1000/$DUR) - 256))")
 ffmpeg -v error -y -i "$TMP" -c:v libx264 -preset slow -crf 23 -maxrate ${MAXK}k -bufsize $((MAXK*2))k -pix_fmt yuv420p \
-  -af "alimiter=limit=0.89:attack=3:release=60:level=disabled" -c:a aac -b:a 256k -movflags +faststart "$OUT"
+  -af "alimiter=limit=0.79:attack=3:release=60:level=disabled" -c:a aac -b:a 256k -movflags +faststart "$OUT"
 rm -f "$TMP"
 ffmpeg -hide_banner -i "$OUT" -vn -af ebur128=framelog=quiet:peak=true -f null - 2>&1 | grep -E " I:|Peak:" | tr -s ' ' | tr '\n' ' '; echo
