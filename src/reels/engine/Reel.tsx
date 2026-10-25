@@ -194,7 +194,9 @@ const TalkingHead: React.FC<{ cfg: ReelConfig; look: Look; emphasis: number[] }>
     <AbsoluteFill style={{ transform: `scale(${1 + emph})`, transformOrigin: face, filter: flick !== 1 ? `brightness(${flick})` : undefined }}>
       {cfg.keep.map(([s, e], i) => {
         const from = Math.round(tl.T(s) * fps);
-        const dur = Math.round(tl.T(e) * fps) - from;
+        // El último tramo sigue corriendo debajo de la placa final (sin hueco negro).
+        const last = i === cfg.keep.length - 1;
+        const dur = Math.round(tl.T(e) * fps) - from + (last ? Math.round((END_HOLD + 0.5) * fps) : 0);
         const segStart = tl.T(s);
         const zoom = (f: number) => {
           const g = segStart + f / fps;

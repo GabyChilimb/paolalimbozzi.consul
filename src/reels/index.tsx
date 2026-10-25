@@ -16,10 +16,11 @@ import { halloween } from "./configs/halloween";
 import { academyFullFace } from "./configs/academy-full-face";
 import { academyLabios } from "./configs/academy-labios";
 import { academyRinomodelacion } from "./configs/academy-rinomodelacion";
+import { academyTecnica } from "./configs/academy-tecnica";
 import { END_HOLD, Reel } from "./engine/Reel";
 import { ReelConfig } from "./engine/types";
 
-export const REELS: ReelConfig[] = [consul1, consul2, consul3, consul4, consul5, consul6, consul7, consul8, bruja, miedoArrugas, halloween, academyFullFace, academyLabios, academyRinomodelacion];
+export const REELS: ReelConfig[] = [consul1, consul2, consul3, consul4, consul5, consul6, consul7, consul8, bruja, miedoArrugas, halloween, academyFullFace, academyLabios, academyRinomodelacion, academyTecnica];
 
 const ReelById: React.FC<{ id: string }> = ({ id }) => <Reel cfg={REELS.find((r) => r.id === id)!} />;
 
