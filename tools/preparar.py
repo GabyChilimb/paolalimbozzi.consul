@@ -32,9 +32,9 @@ def has_audio(path):
 
 
 # Video: si la fuente no es 9:16 se rellena con un fondo desenfocado.
-VF = ("split[a][b];[a]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,boxblur=30:5[bg];"
+VF = ("fps=30,split[a][b];[a]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,boxblur=30:5[bg];"
       "[b]scale=1080:1920:force_original_aspect_ratio=decrease:flags=lanczos[fg];"
-      "[bg][fg]overlay=(W-w)/2:(H-h)/2,setsar=1,fps=30,format=yuv420p")
+      "[bg][fg]overlay=(W-w)/2:(H-h)/2,setsar=1,format=yuv420p")
 
 parts = []
 for i, c in enumerate(clips):
