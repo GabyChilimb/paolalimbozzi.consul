@@ -1,5 +1,5 @@
 import { Segment } from "../../lib/timeline";
-import { HANDLE } from "../handles";
+import { HANDLE, PERFIL } from "../handles";
 import { ReelConfig } from "../engine/types";
 
 // Cónsul / Video 2 — "La medida justa" (clips 1–5).
@@ -11,12 +11,15 @@ const RAW_SEGMENTS: Segment[] = [
   { start: 15.2, end: 19.31, text: "Si querés un resultado armónico y que se note natural, escribime." },
 ];
 
-// KEEP: 4 tramos, 17.67s (original 19.88s) · perfil de voz "media" (tools/finalizar.py)
+// KEEP: 7 tramos, 15.33s · pausas internas recortadas (tools/pausas.py) · perfil de voz "media"
 const KEEP: [number, number][] = [
-  [0.133, 3.367],
-  [3.667, 6.267],
-  [6.533, 14.000],
-  [15.100, 19.467],
+  [0.200, 3.300],
+  [3.733, 6.067],
+  [6.600, 9.433],
+  [9.667, 10.467],
+  [11.233, 12.533],
+  [12.767, 13.633],
+  [15.200, 19.300],
 ];
 
 export const consul2: ReelConfig = {
@@ -26,6 +29,7 @@ export const consul2: ReelConfig = {
   style: "clinica",
   face: { x: 0.47, y: 0.4 },
   handle: HANDLE.consul,
+  profile: PERFIL.consul,
   raw: RAW_SEGMENTS,
   keep: KEEP,
   keywords: ["producto", "resultado", "justa", "justo", "natural", "armónico"],

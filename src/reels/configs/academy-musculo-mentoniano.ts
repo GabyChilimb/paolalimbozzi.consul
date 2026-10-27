@@ -19,20 +19,21 @@ const RAW_SEGMENTS: Segment[] = [
   { start: 218.48, end: 223.7, text: "Diferenciar el componente dinámico de los cambios estructurales es parte de la evaluación clínica." },
 ];
 
-// KEEP: 12 tramos, 41.97s (original 227.37s) · perfil de voz "media" (tools/finalizar.py)
+// KEEP: 13 tramos, 38.97s · pausas internas recortadas (tools/pausas.py) · perfil de voz "media"
 const KEEP: [number, number][] = [
-  [55.167, 59.700],
-  [59.867, 64.200],
-  [77.533, 80.567],
-  [80.767, 82.300],
-  [107.800, 110.633],
-  [111.267, 112.400],
-  [118.933, 121.000],
-  [152.567, 157.500],
-  [165.567, 170.367],
-  [173.633, 176.167],
-  [209.167, 213.933],
-  [218.367, 223.833],
+  [55.333, 59.500],
+  [59.933, 63.933],
+  [77.600, 80.500],
+  [80.833, 82.233],
+  [107.900, 110.467],
+  [111.300, 112.333],
+  [119.000, 120.800],
+  [152.633, 157.333],
+  [165.667, 170.200],
+  [173.700, 176.067],
+  [209.233, 210.033],
+  [210.200, 213.733],
+  [218.433, 223.600],
 ];
 
 export const academyMentoniano: ReelConfig = {

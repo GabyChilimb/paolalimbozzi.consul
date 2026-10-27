@@ -1,5 +1,5 @@
 import { Segment } from "../../lib/timeline";
-import { HANDLE } from "../handles";
+import { HANDLE, PERFIL } from "../handles";
 import { LOOKS } from "../engine/styles";
 import { ReelConfig } from "../engine/types";
 
@@ -20,15 +20,26 @@ const RAW_SEGMENTS: Segment[] = [
   { start: 237.3, end: 241.3, text: "En este Halloween, que el único susto sea el disfraz." },
 ];
 
-// KEEP: 7 tramos, 37.23s (original 243.54s) · perfil de voz "media" (tools/finalizar.py)
+// KEEP: 18 tramos, 30.27s · pausas internas recortadas (tools/pausas.py) · perfil de voz "media"
 const KEEP: [number, number][] = [
-  [3.000, 7.133],
-  [23.100, 27.833],
-  [103.200, 106.933],
-  [138.400, 145.133],
-  [162.500, 167.333],
-  [212.200, 221.033],
-  [237.200, 241.433],
+  [3.167, 4.133],
+  [4.367, 5.367],
+  [5.700, 6.767],
+  [23.233, 26.500],
+  [26.833, 27.400],
+  [103.533, 106.733],
+  [138.600, 141.867],
+  [142.067, 145.067],
+  [162.733, 164.633],
+  [164.867, 167.267],
+  [212.400, 214.300],
+  [214.633, 215.467],
+  [216.200, 218.700],
+  [218.900, 219.700],
+  [220.000, 220.633],
+  [237.333, 238.600],
+  [238.733, 239.933],
+  [240.533, 241.033],
 ];
 
 export const halloween: ReelConfig = {
@@ -45,6 +56,7 @@ export const halloween: ReelConfig = {
   },
   face: { x: 0.5, y: 0.35 },
   handle: HANDLE.consul,
+  profile: PERFIL.consul,
   raw: RAW_SEGMENTS,
   keep: KEEP,
   keywords: ["monstruos", "terrores", "internet", "Instagram", "magia", "criterio", "seguridad", "técnica", "susto", "disfraz"],

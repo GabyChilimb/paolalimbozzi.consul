@@ -16,17 +16,19 @@ const RAW_SEGMENTS: Segment[] = [
   { start: 115.95, end: 121.01, text: "Conocé nuestras propuestas y fijate cuál se adapta a tu etapa profesional." },
 ];
 
-// KEEP: 9 tramos, 31.57s (original 122.62s) · perfil de voz "media" (tools/finalizar.py)
+// KEEP: 11 tramos, 28.80s · pausas internas recortadas (tools/pausas.py) · perfil de voz "media"
 const KEEP: [number, number][] = [
-  [12.600, 14.367],
-  [18.267, 22.633],
-  [23.133, 24.700],
-  [40.433, 44.767],
-  [48.067, 51.433],
-  [53.367, 56.233],
-  [58.833, 61.433],
-  [104.400, 109.833],
-  [115.867, 121.133],
+  [12.667, 14.167],
+  [18.333, 22.400],
+  [23.200, 24.700],
+  [40.533, 44.433],
+  [48.133, 51.333],
+  [53.400, 55.867],
+  [58.900, 61.333],
+  [104.467, 105.833],
+  [106.100, 109.667],
+  [115.933, 117.533],
+  [117.733, 120.933],
 ];
 
 export const academyAntesDeIniciar: ReelConfig = {

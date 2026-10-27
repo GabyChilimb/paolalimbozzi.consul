@@ -1,5 +1,5 @@
 import { Segment } from "../../lib/timeline";
-import { HANDLE } from "../handles";
+import { HANDLE, PERFIL } from "../handles";
 import { ReelConfig } from "../engine/types";
 
 // Cónsul / Video 8 — "Basta de labios que se notan a una cuadra" (clips 1–6).
@@ -12,10 +12,15 @@ const RAW_SEGMENTS: Segment[] = [
   { start: 17.25, end: 20.03, text: "Contame qué te gustaría cambiar de tus labios." },
 ];
 
-// KEEP: 2 tramos, 19.65s (original 20.05s) · perfil de voz "media" (tools/finalizar.py)
+// KEEP: 7 tramos, 16.87s · pausas internas recortadas (tools/pausas.py) · perfil de voz "media"
 const KEEP: [number, number][] = [
-  [0.167, 3.100],
-  [3.333, 20.045],
+  [0.233, 2.933],
+  [3.367, 5.067],
+  [5.633, 8.567],
+  [8.967, 10.900],
+  [11.067, 13.100],
+  [13.400, 16.567],
+  [17.233, 19.633],
 ];
 
 export const consul8: ReelConfig = {
@@ -27,6 +32,7 @@ export const consul8: ReelConfig = {
   face: { x: 0.47, y: 0.3 },
   zones: { hook: 110, top: 960 },
   handle: HANDLE.consul,
+  profile: PERFIL.consul,
   raw: RAW_SEGMENTS,
   keep: KEEP,
   keywords: ["labios", "cuadra", "exagerada", "anatomía", "forma", "hidratación", "volumen"],

@@ -1,5 +1,5 @@
 import { Segment } from "../../lib/timeline";
-import { HANDLE } from "../handles";
+import { HANDLE, PERFIL } from "../handles";
 import { ReelConfig } from "../engine/types";
 
 // Cónsul / Video 5 — "¿Tenés miedo a quedar congelada?" (clips 1–4).
@@ -12,12 +12,19 @@ const RAW_SEGMENTS: Segment[] = [
   { start: 14.01, end: 17.46, text: "Si querés sentirte fresca y descansada, escribime." },
 ];
 
-// KEEP: 4 tramos, 16.43s (original 17.47s) · perfil de voz "media" (tools/finalizar.py)
+// KEEP: 11 tramos, 13.40s · pausas internas recortadas (tools/pausas.py) · perfil de voz "media"
 const KEEP: [number, number][] = [
-  [0.100, 3.500],
-  [3.767, 6.100],
-  [6.233, 9.200],
-  [9.733, 17.467],
+  [0.167, 2.333],
+  [2.600, 3.367],
+  [3.867, 5.033],
+  [5.167, 5.900],
+  [6.300, 7.367],
+  [7.567, 8.733],
+  [9.867, 12.133],
+  [12.300, 13.400],
+  [14.033, 15.033],
+  [15.167, 16.467],
+  [16.533, 17.200],
 ];
 
 export const consul5: ReelConfig = {
@@ -27,6 +34,7 @@ export const consul5: ReelConfig = {
   style: "calido",
   face: { x: 0.43, y: 0.46 },
   handle: HANDLE.consul,
+  profile: PERFIL.consul,
   raw: RAW_SEGMENTS,
   keep: KEEP,
   keywords: ["congelada", "sonríe", "cejas", "entrecejo", "gestos", "tuyos", "fresca", "descansada"],

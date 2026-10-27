@@ -1,5 +1,5 @@
 import { Segment } from "../../lib/timeline";
-import { HANDLE } from "../handles";
+import { HANDLE, PERFIL } from "../handles";
 import { LOOKS } from "../engine/styles";
 import { ReelConfig } from "../engine/types";
 
@@ -17,14 +17,17 @@ const RAW_SEGMENTS: Segment[] = [
   { start: 51.5, end: 54.3, text: "Que el terror quede para Halloween." },
 ];
 
-// KEEP: 6 tramos, 19.10s (original 54.40s) · perfil de voz "media" (tools/finalizar.py)
+// KEEP: 9 tramos, 16.00s · pausas internas recortadas (tools/pausas.py) · perfil de voz "media"
 const KEEP: [number, number][] = [
-  [0.467, 2.733],
-  [6.600, 9.900],
-  [14.733, 18.733],
-  [38.433, 42.333],
-  [45.100, 47.733],
-  [51.400, 54.399],
+  [0.567, 2.500],
+  [6.700, 9.733],
+  [14.900, 16.633],
+  [16.800, 18.733],
+  [38.600, 42.067],
+  [45.267, 46.600],
+  [46.733, 47.500],
+  [51.633, 52.500],
+  [52.867, 53.800],
 ];
 
 export const miedoArrugas: ReelConfig = {
@@ -40,6 +43,7 @@ export const miedoArrugas: ReelConfig = {
   },
   face: { x: 0.5, y: 0.38 },
   handle: HANDLE.consul,
+  profile: PERFIL.consul,
   raw: RAW_SEGMENTS,
   keep: KEEP,
   keywords: ["miedo", "lentamente", "avisar", "arrugas", "maldición", "tratarlas", "terror", "Halloween"],

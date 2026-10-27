@@ -1,5 +1,5 @@
 import { Segment } from "../../lib/timeline";
-import { HANDLE } from "../handles";
+import { HANDLE, PERFIL } from "../handles";
 import { ReelConfig } from "../engine/types";
 
 // Cónsul / Video 1 — "No todas necesitan bótox" (clips 1–6).
@@ -13,13 +13,21 @@ const RAW_SEGMENTS: Segment[] = [
   { start: 23.18, end: 25.27, text: "Escribime y vemos cuál es tu caso." },
 ];
 
-// KEEP: 5 tramos, 21.93s (original 26.02s) · perfil de voz "media" (tools/finalizar.py)
+// KEEP: 13 tramos, 19.10s · pausas internas recortadas (tools/pausas.py) · perfil de voz "media"
 const KEEP: [number, number][] = [
-  [0.000, 3.333],
-  [3.633, 8.067],
-  [8.200, 13.067],
-  [15.600, 17.600],
-  [18.100, 25.400],
+  [0.067, 1.467],
+  [1.733, 3.167],
+  [3.700, 5.200],
+  [5.433, 7.467],
+  [7.833, 7.967],
+  [8.267, 13.000],
+  [15.633, 16.067],
+  [16.200, 17.333],
+  [17.500, 17.600],
+  [18.167, 20.067],
+  [20.167, 21.567],
+  [21.733, 22.567],
+  [23.133, 25.200],
 ];
 
 export const consul1: ReelConfig = {
@@ -29,6 +37,7 @@ export const consul1: ReelConfig = {
   style: "pop",
   face: { x: 0.49, y: 0.46 },
   handle: HANDLE.consul,
+  profile: PERFIL.consul,
   raw: RAW_SEGMENTS,
   keep: KEEP,
   keywords: ["bótox", "tratamiento", "piel", "evalúo", "digo"],

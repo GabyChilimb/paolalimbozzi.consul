@@ -16,17 +16,24 @@ const RAW_SEGMENTS: Segment[] = [
   { start: 85.32, end: 87.28, text: "Primero el rostro, después el labio." },
 ];
 
-// KEEP: 9 tramos, 40.93s (original 97.30s) · perfil de voz "media" (tools/finalizar.py)
+// KEEP: 16 tramos, 36.50s · pausas internas recortadas (tools/pausas.py) · perfil de voz "media"
 const KEEP: [number, number][] = [
-  [1.133, 6.567],
-  [7.067, 9.167],
-  [26.300, 34.467],
-  [38.133, 41.033],
-  [47.467, 53.300],
-  [59.767, 64.633],
-  [68.267, 72.933],
-  [79.133, 83.900],
-  [85.233, 87.433],
+  [1.200, 3.500],
+  [3.800, 5.000],
+  [5.567, 6.433],
+  [7.133, 8.900],
+  [26.400, 27.833],
+  [27.933, 31.133],
+  [31.300, 32.300],
+  [32.433, 34.133],
+  [38.200, 40.933],
+  [47.500, 53.100],
+  [59.867, 62.433],
+  [62.733, 64.467],
+  [68.333, 72.533],
+  [79.233, 83.733],
+  [85.300, 86.233],
+  [86.433, 87.200],
 ];
 
 export const academyLabios: ReelConfig = {

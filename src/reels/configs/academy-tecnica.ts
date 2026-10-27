@@ -16,17 +16,18 @@ const RAW_SEGMENTS: Segment[] = [
   { start: 95.24, end: 100.08, text: "Si buscás una formación que vaya más allá de la técnica, conocé nuestras propuestas." },
 ];
 
-// KEEP: 9 tramos, 38.00s (original 105.11s) · perfil de voz "media" (tools/finalizar.py)
+// KEEP: 10 tramos, 35.67s · pausas internas recortadas (tools/pausas.py) · perfil de voz "media"
 const KEEP: [number, number][] = [
-  [6.067, 10.467],
-  [13.667, 17.767],
-  [21.933, 26.233],
-  [36.567, 40.500],
-  [45.500, 49.100],
-  [53.467, 58.767],
-  [70.067, 74.100],
-  [81.233, 84.467],
-  [95.133, 100.233],
+  [6.133, 10.367],
+  [13.700, 17.600],
+  [22.000, 25.800],
+  [36.667, 40.300],
+  [45.600, 48.900],
+  [49.033, 49.100],
+  [53.533, 58.633],
+  [70.100, 74.100],
+  [81.300, 84.267],
+  [95.133, 99.800],
 ];
 
 export const academyTecnica: ReelConfig = {

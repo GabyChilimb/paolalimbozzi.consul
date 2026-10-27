@@ -15,6 +15,8 @@ PERFIL = sys.argv[4] if len(sys.argv) > 4 else "limpia"
 PRE, POST, MIN_GAP = 0.10, 0.14, 0.08
 FPS = 30
 SR = 48000
+# Opcional: tramos KEEP ya calculados (json), p. ej. por tools/pausas.py.
+KEEP_JSON = sys.argv[5] if len(sys.argv) > 5 else None
 
 # Tramos con voz: los mismos tiempos que SEGMENTS en transcript.ts.
 ts = open(TRANSCRIPT).read()
@@ -30,6 +32,8 @@ for s, e in segs:
         keep[-1][1] = b
     else:
         keep.append([a, b])
+if KEEP_JSON:
+    keep = [list(x) for x in json.load(open(KEEP_JSON))]
 
 # 1) Mejora de voz sobre el audio completo.
 PERFILES = {

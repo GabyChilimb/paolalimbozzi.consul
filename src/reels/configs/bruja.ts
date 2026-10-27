@@ -1,5 +1,5 @@
 import { Segment } from "../../lib/timeline";
-import { HANDLE } from "../handles";
+import { HANDLE, PERFIL } from "../handles";
 import { LOOKS } from "../engine/styles";
 import { ReelConfig } from "../engine/types";
 
@@ -20,15 +20,23 @@ const RAW_SEGMENTS: Segment[] = [
   { start: 64.55, end: 67.25, text: "Con algunas consultas ya tengo suficiente." },
 ];
 
-// KEEP: 7 tramos, 30.93s (original 69.27s) · perfil de voz "ruidosa" (tools/finalizar.py)
+// KEEP: 15 tramos, 26.63s · pausas internas recortadas (tools/pausas.py) · perfil de voz "ruidosa"
 const KEEP: [number, number][] = [
-  [1.667, 5.433],
-  [15.100, 18.900],
-  [19.000, 23.733],
-  [27.667, 34.933],
-  [42.433, 47.333],
-  [57.700, 61.233],
-  [64.467, 67.400],
+  [1.867, 3.400],
+  [4.067, 4.700],
+  [4.833, 5.033],
+  [15.200, 15.900],
+  [16.400, 18.633],
+  [19.067, 23.733],
+  [27.800, 28.733],
+  [28.833, 30.433],
+  [30.867, 34.867],
+  [42.533, 45.267],
+  [45.567, 47.267],
+  [57.867, 60.967],
+  [64.567, 65.867],
+  [65.967, 67.100],
+  [67.200, 67.367],
 ];
 
 export const bruja: ReelConfig = {
@@ -40,6 +48,7 @@ export const bruja: ReelConfig = {
   face: { x: 0.5, y: 0.3 },
   zones: { top: 980 },
   handle: HANDLE.consul,
+  profile: PERFIL.consul,
   raw: RAW_SEGMENTS,
   keep: KEEP,
   keywords: ["oscuro", "veneno", "TikTok", "casa", "siempre", "terror", "suficiente"],

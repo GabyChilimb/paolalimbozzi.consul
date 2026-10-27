@@ -1,5 +1,5 @@
 import { Segment } from "../../lib/timeline";
-import { HANDLE } from "../handles";
+import { HANDLE, PERFIL } from "../handles";
 import { ReelConfig } from "../engine/types";
 
 // Cónsul / Video 6 — "¿Se te cayó la ceja o el párpado?" (clips 1–7).
@@ -13,10 +13,16 @@ const RAW_SEGMENTS: Segment[] = [
   { start: 24.57, end: 28.59, text: "Si te pasó, escribime. Trabajo con complicaciones todos los días." },
 ];
 
-// KEEP: 2 tramos, 28.23s (original 28.60s) · perfil de voz "media" (tools/finalizar.py)
+// KEEP: 8 tramos, 25.73s · pausas internas recortadas (tools/pausas.py) · perfil de voz "media"
 const KEEP: [number, number][] = [
-  [0.067, 24.167],
-  [24.467, 28.599],
+  [0.133, 3.867],
+  [4.133, 8.667],
+  [8.833, 11.100],
+  [11.500, 14.767],
+  [14.967, 18.733],
+  [18.833, 19.733],
+  [20.233, 24.000],
+  [24.533, 28.033],
 ];
 
 export const consul6: ReelConfig = {
@@ -26,6 +32,7 @@ export const consul6: ReelConfig = {
   style: "editorial",
   face: { x: 0.52, y: 0.4 },
   handle: HANDLE.consul,
+  profile: PERFIL.consul,
   raw: RAW_SEGMENTS,
   keep: KEEP,
   keywords: ["ceja", "párpado", "temporal", "normalidad", "médico", "evaluación", "dosis", "complicaciones"],

@@ -1,5 +1,5 @@
 import { Segment } from "../../lib/timeline";
-import { HANDLE } from "../handles";
+import { HANDLE, PERFIL } from "../handles";
 import { ReelConfig } from "../engine/types";
 
 // Cónsul / Video 4 — "El bótox barato sale carísimo" (clips 1–7).
@@ -14,15 +14,22 @@ const RAW_SEGMENTS: Segment[] = [
   { start: 27.21, end: 30.8, text: "Si querés saber qué plan es para vos, escribime y te evaluamos." },
 ];
 
-// KEEP: 7 tramos, 27.43s (original 31.14s) · perfil de voz "media" (tools/finalizar.py)
+// KEEP: 14 tramos, 23.73s · pausas internas recortadas (tools/pausas.py) · perfil de voz "media"
 const KEEP: [number, number][] = [
-  [0.000, 3.100],
-  [3.200, 4.600],
-  [5.367, 8.667],
-  [9.733, 14.767],
-  [15.733, 20.167],
-  [20.567, 26.900],
-  [27.100, 30.933],
+  [0.100, 1.533],
+  [1.733, 2.967],
+  [3.267, 4.267],
+  [5.467, 8.367],
+  [9.767, 14.600],
+  [15.800, 16.300],
+  [16.433, 17.867],
+  [17.967, 18.633],
+  [18.867, 19.767],
+  [20.633, 21.833],
+  [21.933, 23.367],
+  [23.633, 25.867],
+  [26.167, 26.700],
+  [27.200, 30.633],
 ];
 
 export const consul4: ReelConfig = {
@@ -32,6 +39,7 @@ export const consul4: ReelConfig = {
   style: "anotador",
   face: { x: 0.49, y: 0.45 },
   handle: HANDLE.consul,
+  profile: PERFIL.consul,
   raw: RAW_SEGMENTS,
   keep: KEEP,
   keywords: ["barato", "carísimo", "corregir", "congelada", "caída", "producto", "caja", "médico", "zonas"],

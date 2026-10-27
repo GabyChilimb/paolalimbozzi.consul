@@ -1,5 +1,5 @@
 import { Segment } from "../../lib/timeline";
-import { HANDLE } from "../handles";
+import { HANDLE, PERFIL } from "../handles";
 import { ReelConfig } from "../engine/types";
 
 // Cónsul / Video 3 — "Tratamientos que nunca le daría a un paciente".
@@ -19,18 +19,23 @@ const RAW_SEGMENTS: Segment[] = [
   { start: 28.19, end: 31.06, text: "¿Te pasó alguna de estas? Contame en los comentarios." },
 ];
 
-// KEEP: 10 tramos, 26.59s (original 31.09s) · perfil de voz "media" (tools/finalizar.py)
+// KEEP: 15 tramos, 21.97s · pausas internas recortadas (tools/pausas.py) · perfil de voz "media"
 const KEEP: [number, number][] = [
-  [0.000, 1.400],
-  [1.500, 2.467],
-  [4.333, 6.200],
-  [6.367, 7.633],
-  [7.867, 10.633],
-  [10.733, 13.100],
-  [13.367, 15.067],
-  [15.333, 22.333],
-  [23.700, 27.967],
-  [28.100, 31.088],
+  [0.067, 1.067],
+  [1.533, 2.300],
+  [4.367, 6.100],
+  [6.433, 7.467],
+  [7.933, 8.667],
+  [8.767, 10.033],
+  [10.833, 12.933],
+  [13.467, 14.400],
+  [15.400, 17.267],
+  [17.467, 20.700],
+  [20.967, 21.967],
+  [23.700, 25.000],
+  [25.100, 27.733],
+  [28.167, 29.433],
+  [29.567, 30.667],
 ];
 
 export const consul3: ReelConfig = {
@@ -40,6 +45,7 @@ export const consul3: ReelConfig = {
   style: "noche",
   face: { x: 0.49, y: 0.44 },
   handle: HANDLE.consul,
+  profile: PERFIL.consul,
   raw: RAW_SEGMENTS,
   keep: KEEP,
   keywords: ["nunca", "evaluar", "distinto", "caja", "lote", "vencimiento", "versión"],

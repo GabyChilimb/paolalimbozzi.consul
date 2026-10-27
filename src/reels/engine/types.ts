@@ -41,6 +41,8 @@ export type ReelConfig = {
   // Posición vertical (px) de las zonas de gráficos si la cara queda en el medio.
   zones?: { hook?: number; top?: number };
   handle: string;
+  // Cuenta personal: foto de perfil y "Nombre | Rubro" (si falta, va el monograma PL).
+  profile?: { name: string; photo: string };
   raw: Segment[];
   keep: [number, number][];
   keywords?: string[]; // palabras que se colorean en los subtítulos

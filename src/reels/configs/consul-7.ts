@@ -1,5 +1,5 @@
 import { Segment } from "../../lib/timeline";
-import { HANDLE } from "../handles";
+import { HANDLE, PERFIL } from "../handles";
 import { ReelConfig } from "../engine/types";
 
 // Cónsul / Video 7 — "Nadie se va a dar cuenta" (clips 1–5).
@@ -13,10 +13,17 @@ const RAW_SEGMENTS: Segment[] = [
   { start: 16.67, end: 19.52, text: "Si te dicen que se te ve bien, salió bien." },
 ];
 
-// KEEP: 2 tramos, 17.27s (original 20.41s) · perfil de voz "media" (tools/finalizar.py)
+// KEEP: 9 tramos, 14.53s · pausas internas recortadas (tools/pausas.py) · perfil de voz "media"
 const KEEP: [number, number][] = [
-  [0.433, 6.000],
-  [7.967, 19.667],
+  [0.467, 1.733],
+  [1.967, 3.267],
+  [3.700, 5.967],
+  [8.033, 10.400],
+  [10.633, 12.933],
+  [13.633, 16.033],
+  [16.633, 18.467],
+  [18.600, 18.800],
+  [18.900, 19.500],
 ];
 
 export const consul7: ReelConfig = {
@@ -27,6 +34,7 @@ export const consul7: ReelConfig = {
   lookOverride: { accent: "#5BC0EB", marker: "#5BC0EB" },
   face: { x: 0.47, y: 0.4 },
   handle: HANDLE.consul,
+  profile: PERFIL.consul,
   raw: RAW_SEGMENTS,
   keep: KEEP,
   keywords: ["nadie", "idea", "nota", "descansada", "proporciones", "dosis", "poco", "bien"],

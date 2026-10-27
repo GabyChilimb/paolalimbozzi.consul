@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import {
   AbsoluteFill,
   Easing,
+  Img,
   interpolate,
   OffthreadVideo,
   random,
@@ -26,6 +27,9 @@ const springy = (t: number, at: number) => {
 const norm = (w: string) => w.toLowerCase().replace(/[^\p{L}\p{N}]/gu, "");
 
 export const END_HOLD = 3.2;
+// Cortes de pausas cortas (menos de esto en el original): sin efecto de transición ni sonido.
+const MICRO_CUT = 0.35;
+const isMajorCut = (keep: [number, number][], i: number) => i > 0 && keep[i][0] - keep[i - 1][1] >= MICRO_CUT;
 
 /* ───────────── Línea de tiempo resuelta ───────────── */
 
@@ -49,7 +53,7 @@ export const useReel = (cfg: ReelConfig) =>
       return { c, from, to: Math.max(to, from + 0.8) };
     });
     const hookTo = cfg.hook.to !== undefined ? at(cfg.hook.to) : Math.min(tl.SEGMENTS[0].end + 0.2, (wins[0]?.from ?? 99) - 0.05);
-    const cuts = cfg.keep.slice(1).map(([s]) => tl.T(s));
+    const cuts = cfg.keep.filter((_, i) => isMajorCut(cfg.keep, i)).map(([s]) => tl.T(s));
     return { tl, at, wins, endCardAt, ctaAt, hookTo, cuts, duration: endCardAt + END_HOLD };
   }, [cfg]);
 
@@ -208,7 +212,7 @@ const TalkingHead: React.FC<{ cfg: ReelConfig; look: Look; emphasis: number[] }>
         const pan = look.zoom === "pan" ? Math.sin(segStart * 0.4 + i) * 30 + Math.sin(t * 0.3) * 20 : 0;
         return (
           <Sequence key={i} from={from} durationInFrames={Math.max(1, dur)} layout="none">
-            <Clip src={`reels/${cfg.dir}/fuente.mp4`} startFrame={Math.round(s * fps)} zoom={zoom} look={look} face={face} index={i} pan={pan} />
+            <Clip src={`reels/${cfg.dir}/fuente.mp4`} startFrame={Math.round(s * fps)} zoom={zoom} look={look} face={face} index={isMajorCut(cfg.keep, i) ? i : 0} pan={pan} />
           </Sequence>
         );
       })}
@@ -781,6 +785,16 @@ const Cta: React.FC<{ cfg: ReelConfig; look: Look }> = ({ cfg, look }) => {
   );
 };
 
+// Foto de perfil (cuenta personal) o monograma PL (academia).
+const Avatar: React.FC<{ cfg: ReelConfig; look: Look; size: number; border: number }> = ({ cfg, look, size, border }) =>
+  cfg.profile ? (
+    <Img src={staticFile(cfg.profile.photo)} style={{ width: size, height: size, borderRadius: size / 2, border: `${border}px solid ${look.accent2}`, objectFit: "cover", display: "block" }} />
+  ) : (
+    <span style={{ width: size, height: size, borderRadius: size / 2, border: `${border}px solid ${look.accent2}`, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: '"Fraunces", serif', fontStyle: "italic", fontSize: size * 0.41, color: look.accent2 }}>
+      PL
+    </span>
+  );
+
 const EndCard: React.FC<{ cfg: ReelConfig; look: Look }> = ({ cfg, look }) => {
   const t = useT();
   const { endCardAt } = useReel(cfg);
@@ -790,27 +804,23 @@ const EndCard: React.FC<{ cfg: ReelConfig; look: Look }> = ({ cfg, look }) => {
   return (
     <AbsoluteFill style={{ background: look.endBg, opacity: p, alignItems: "center", justifyContent: "center", textAlign: "center", color: look.endInk }}>
       {look.particles !== "none" && <ParticleField kind={look.particles} t={t} look={look} />}
-      <div
-        style={{
-          width: 170,
-          height: 170,
-          borderRadius: 85,
-          border: `3px solid ${look.accent2}`,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontFamily: '"Fraunces", serif',
-          fontStyle: "italic",
-          fontSize: 70,
-          color: look.accent2,
-          transform: `scale(${0.6 + 0.4 * Math.min(1.05, s)})`,
-        }}
-      >
-        PL
+      <div style={{ transform: `scale(${0.6 + 0.4 * Math.min(1.05, s)})` }}>
+        <Avatar cfg={cfg} look={look} size={190} border={4} />
       </div>
-      <div style={{ fontFamily: '"Fraunces", serif', fontSize: 78, marginTop: 40 }}>
-        Dra. Paola <span style={{ fontStyle: "italic", color: look.accent }}>Limbozzi</span>
-      </div>
+      {cfg.profile ? (
+        <>
+          <div style={{ fontFamily: '"Fraunces", serif', fontSize: 78, marginTop: 40 }}>
+            Paola <span style={{ fontStyle: "italic", color: look.accent }}>Limbozzi</span>
+          </div>
+          <div style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: 28, letterSpacing: "0.22em", textTransform: "uppercase", marginTop: 14, opacity: 0.85 }}>
+            {cfg.profile.name.split("|").slice(1).join("|").trim()}
+          </div>
+        </>
+      ) : (
+        <div style={{ fontFamily: '"Fraunces", serif', fontSize: 78, marginTop: 40 }}>
+          Dra. Paola <span style={{ fontStyle: "italic", color: look.accent }}>Limbozzi</span>
+        </div>
+      )}
       <div style={{ display: "flex", alignItems: "center", gap: 14, marginTop: 40, background: look.endBg === "#FBF9F5" || look.endBg === "#FFF7EC" ? "#1B1815" : "#FFFFFF", color: look.endBg === "#FBF9F5" || look.endBg === "#FFF7EC" ? "#FFFFFF" : "#0A0B10", fontFamily: '"Inter", sans-serif', fontWeight: 700, fontSize: 38, padding: "18px 32px", borderRadius: 60 }}>
         <InstagramGlyph size={38} color={look.accent} />
         {cfg.handle}
@@ -847,9 +857,7 @@ const Header: React.FC<{ cfg: ReelConfig; look: Look }> = ({ cfg, look }) => {
         fontSize: 26,
       }}
     >
-      <span style={{ width: 44, height: 44, borderRadius: 22, border: `2px solid ${look.accent2}`, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: '"Fraunces", serif', fontStyle: "italic", fontSize: 18, color: look.accent2 }}>
-        PL
-      </span>
+      <Avatar cfg={cfg} look={look} size={44} border={2} />
       <InstagramGlyph size={26} color="#fff" />
       {cfg.handle}
     </div>
