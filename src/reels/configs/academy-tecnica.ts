@@ -13,12 +13,14 @@ const RAW_SEGMENTS: Segment[] = [
   { start: 53.58, end: 58.64, text: "También necesitás orientación para seguir desarrollando tu criterio clínico." },
   { start: 70.15, end: 73.96, text: "En Paola Limbozzi Academy combinamos formación científica," },
   { start: 81.32, end: 84.31, text: "práctica supervisada y acompañamiento posterior." },
-  { start: 95.24, end: 100.08, text: "Si buscás una formación que vaya más allá de la técnica, conocé nuestras propuestas." },
+  { start: 95.24, end: 98.45, text: "Si buscás una formación que vaya más allá de la técnica," },
+  // En 98.5–100 el "conocé nuestras propuestas" lo dice alguien fuera de cámara; va la toma de la Dra.
+  { start: 100.62, end: 102.1, text: "conocé nuestras propuestas." },
 ];
 
-// KEEP: 10 tramos, 35.67s · pausas internas recortadas (tools/pausas.py) · perfil de voz "media"
+// KEEP: 11 tramos, 35.90s · pausas internas recortadas (tools/pausas.py) · perfil de voz "media"
 const KEEP: [number, number][] = [
-  [6.133, 10.367],
+  [6.133, 10.333],
   [13.700, 17.600],
   [22.000, 25.800],
   [36.667, 40.300],
@@ -27,7 +29,8 @@ const KEEP: [number, number][] = [
   [53.533, 58.633],
   [70.100, 74.100],
   [81.300, 84.267],
-  [95.133, 99.800],
+  [95.133, 98.500],
+  [100.600, 102.167],
 ];
 
 export const academyTecnica: ReelConfig = {
