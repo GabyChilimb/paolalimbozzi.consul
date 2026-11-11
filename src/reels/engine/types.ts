@@ -28,7 +28,7 @@ export type Callout =
   // Círculo/mira sobre la cara (x, y en px del cuadro 1080×1920).
   | { kind: "target"; at: Anchor; to?: Anchor; x: number; y: number; label: string };
 
-export type StyleName = "clinica" | "editorial" | "pop" | "noche" | "anotador" | "academia" | "bruja" | "calido";
+export type StyleName = "clinica" | "editorial" | "pop" | "noche" | "anotador" | "academia" | "bruja" | "calido" | "kennedy";
 
 export type ReelConfig = {
   id: string; // id de la composición en Remotion

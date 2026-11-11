@@ -72,6 +72,10 @@ for s, e in keep:
         k0, k1 = idx(z0), idx(z1)
         # (salta huecos cortos: el cierre de una "t" o una "c" antes de la última sílaba)
         fin = min(n, k1 + int(COLA / HOP))
+        # ...pero no entra en el arranque de otra palabra (vuelve a superar el umbral normal).
+        fuerte = np.nonzero(db[k1:fin] >= umbral)[0]
+        if len(fuerte):
+            fin = k1 + int(fuerte[0])
         suena = np.nonzero(db[k1:fin] >= umbral_bajo)[0]
         if len(suena):
             k1 += int(suena[-1]) + 1

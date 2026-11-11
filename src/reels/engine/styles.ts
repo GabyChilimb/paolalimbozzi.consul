@@ -57,6 +57,30 @@ const base = {
 };
 
 export const LOOKS: Record<StyleName, Look> = {
+  // Universidad Kennedy: rojo institucional dominante, dorado y blanco; cortes con barrido y motion blur.
+  kennedy: {
+    ...base,
+    accent: "#E8C46A",
+    accent2: "#F3DC9A",
+    cardBg: "#A6192E",
+    cardInk: "#FFFFFF",
+    marker: "#E8C46A",
+    titleFont: serif,
+    titleUpper: false,
+    emItalic: true,
+    captions: "box",
+    captionsY: 1440,
+    zoom: "punch",
+    zoomAmount: 0.1,
+    cut: "whip",
+    motionBlur: true,
+    grade: "contrast(1.05) saturate(1.04) brightness(1.02)",
+    vignette: 0.22,
+    particles: "sparkle",
+    endBg: "#8E1426",
+    endInk: "#FFFFFF",
+    sfx: { enter: "whoosh", item: "pop", big: "impacto", stamp: "brillo", cta: "ding", riser: "riser", end: "sting", note: "click" },
+  },
   // Consultorio luminoso: tarjetas negras, sans bold, cortes con zoom.
   clinica: {
     ...base,

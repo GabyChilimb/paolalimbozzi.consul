@@ -22,10 +22,12 @@ import { academyContraccion } from "./configs/academy-contraccion-muscular";
 import { academyMentoniano } from "./configs/academy-musculo-mentoniano";
 import { academyFosaTemporal } from "./configs/academy-fosa-temporal";
 import { academyMascara } from "./configs/academy-mascara";
+import { diploMedicina } from "./configs/diplo-medicina";
+import { diploOdonto } from "./configs/diplo-odonto";
 import { END_HOLD, Reel } from "./engine/Reel";
 import { ReelConfig } from "./engine/types";
 
-export const REELS: ReelConfig[] = [consul1, consul2, consul3, consul4, consul5, consul6, consul7, consul8, bruja, miedoArrugas, halloween, academyFullFace, academyLabios, academyRinomodelacion, academyTecnica, academyAntesDeIniciar, academyContraccion, academyMentoniano, academyFosaTemporal, academyMascara];
+export const REELS: ReelConfig[] = [consul1, consul2, consul3, consul4, consul5, consul6, consul7, consul8, bruja, miedoArrugas, halloween, academyFullFace, academyLabios, academyRinomodelacion, academyTecnica, academyAntesDeIniciar, academyContraccion, academyMentoniano, academyFosaTemporal, academyMascara, diploMedicina, diploOdonto];
 
 const ReelById: React.FC<{ id: string }> = ({ id }) => <Reel cfg={REELS.find((r) => r.id === id)!} />;
 
