@@ -2,7 +2,7 @@
 # Renderiza un reel y le pasa un limitador al audio (picos a -1 dBFS).
 # Uso: tools/exportar.sh <IdComposicion> <salida.mp4> [navegador]
 set -e
-ID=$1; OUT=$2; BROWSER=${3:-/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell}
+ID=$1; OUT=$2; BROWSER=${3:-$(ls /opt/pw-browsers/chromium_headless_shell-*/chrome-linux/headless_shell /opt/pw-browsers/chromium_headless_shell-*/chrome-headless-shell-linux64/chrome-headless-shell 2>/dev/null | head -1)}
 TMP="${OUT%.mp4}.tmp.mp4"
 mkdir -p "$(dirname "$OUT")"
 npx remotion render "$ID" "$TMP" --browser-executable="$BROWSER" --concurrency=3 --timeout=180000 --crf=16 --audio-bitrate=256k --log=error

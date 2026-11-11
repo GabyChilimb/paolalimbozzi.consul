@@ -27,6 +27,30 @@ const springy = (t: number, at: number) => {
 const norm = (w: string) => w.toLowerCase().replace(/[^\p{L}\p{N}]/gu, "");
 
 export const END_HOLD = 3.2;
+
+/* Motion blur direccional: filtros SVG con desenfoque en un solo eje. */
+const MB_LEVELS = 8;
+const MotionBlurDefs: React.FC = () => (
+  <svg width={0} height={0} style={{ position: "absolute" }}>
+    <defs>
+      {Array.from({ length: MB_LEVELS }, (_, i) => (
+        <React.Fragment key={i}>
+          <filter id={`mbx${i + 1}`} x="-20%" y="-5%" width="140%" height="110%">
+            <feGaussianBlur stdDeviation={`${(i + 1) * 5} 0`} />
+          </filter>
+          <filter id={`mby${i + 1}`} x="-5%" y="-30%" width="110%" height="160%">
+            <feGaussianBlur stdDeviation={`0 ${(i + 1) * 2.5}`} />
+          </filter>
+        </React.Fragment>
+      ))}
+    </defs>
+  </svg>
+);
+// amount 0..1 → filtro url() del nivel correspondiente (o vacío si es casi nulo).
+const mb = (axis: "x" | "y", amount: number) => {
+  const lvl = Math.round(Math.min(1, Math.max(0, amount)) * MB_LEVELS);
+  return lvl > 0 ? ` url(#mb${axis}${lvl})` : "";
+};
 // Cortes de pausas cortas (menos de esto en el original): sin efecto de transición ni sonido.
 const MICRO_CUT = 0.35;
 const isMajorCut = (keep: [number, number][], i: number) => i > 0 && keep[i][0] - keep[i - 1][1] >= MICRO_CUT;
@@ -54,7 +78,8 @@ export const useReel = (cfg: ReelConfig) =>
     });
     const hookTo = cfg.hook.to !== undefined ? at(cfg.hook.to) : Math.min(tl.SEGMENTS[0].end + 0.2, (wins[0]?.from ?? 99) - 0.05);
     const cuts = cfg.keep.filter((_, i) => isMajorCut(cfg.keep, i)).map(([s]) => tl.T(s));
-    return { tl, at, wins, endCardAt, ctaAt, hookTo, cuts, duration: endCardAt + END_HOLD };
+    const brolls = (cfg.broll ?? []).map((b) => ({ src: b.src, from: b.from ?? 0, at: at(b.at), to: at(b.to) }));
+    return { tl, at, wins, endCardAt, ctaAt, hookTo, cuts, brolls, duration: endCardAt + END_HOLD };
   }, [cfg]);
 
 const useT = () => {
@@ -106,7 +131,8 @@ const TitleText: React.FC<{ parts: Part[]; at: number; look: Look; size: number;
             style={{
               display: "inline-block",
               opacity: p,
-              transform: `translateY(${(1 - p) * 26}px) scale(${0.9 + 0.1 * p})`,
+              transform: `translateY(${(1 - p) * (look.motionBlur ? 60 : 26)}px) scale(${0.9 + 0.1 * p})`,
+              filter: look.motionBlur && p < 1 ? mb("y", (1 - p) * 1.4) || undefined : undefined,
               color: tok.em ? look.accent : undefined,
               fontStyle: tok.em && look.emItalic ? "italic" : "normal",
             }}
@@ -155,13 +181,14 @@ const Clip: React.FC<{ src: string; startFrame: number; zoom: (frameInClip: numb
       blur = 9 * (1 - e);
     } else if (look.cut === "whip") {
       tx = -140 * (1 - e);
-      blur = 12 * (1 - e);
+      blur = look.motionBlur ? 0 : 12 * (1 - e);
     } else if (look.cut === "glitch" && frame < 5) {
       tx = (random(`g${index}-${frame}`) - 0.5) * 60;
       hue = 40 * (random(`h${index}-${frame}`) - 0.5);
     }
   }
-  const filter = `${look.grade}${blur > 0.1 ? ` blur(${blur.toFixed(1)}px)` : ""}${hue ? ` hue-rotate(${hue}deg)` : ""}`;
+  const whipBlur = look.motionBlur && look.cut === "whip" && index > 0 ? mb("x", 1 - e) : "";
+  const filter = `${look.grade}${blur > 0.1 ? ` blur(${blur.toFixed(1)}px)` : ""}${hue ? ` hue-rotate(${hue}deg)` : ""}${whipBlur}`;
   return (
     <AbsoluteFill style={{ overflow: "hidden" }}>
       <OffthreadVideo
@@ -216,6 +243,29 @@ const TalkingHead: React.FC<{ cfg: ReelConfig; look: Look; emphasis: number[] }>
           </Sequence>
         );
       })}
+    </AbsoluteFill>
+  );
+};
+
+/* ───────────── Tomas de apoyo ───────────── */
+
+// Entra y sale con un barrido lateral (con motion blur si el estilo lo tiene) y un empuje lento.
+const BRoll: React.FC<{ src: string; from: number; dur: number; look: Look }> = ({ src, from, dur, look }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const n = dur * fps;
+  const IN = 9;
+  const kIn = Math.min(1, frame / IN);
+  const kOut = Math.min(1, Math.max(0, (frame - (n - IN)) / IN));
+  const eIn = 1 - (1 - kIn) ** 3;
+  const eOut = kOut ** 3;
+  const tx = 1080 * (1 - eIn) - 1080 * eOut;
+  const speed = (1 - eIn) + eOut; // 0 quieto, 1 en pleno barrido
+  const push = 1.04 + 0.08 * (frame / n);
+  const blur = look.motionBlur ? mb("x", speed * 1.6) : speed > 0.05 ? ` blur(${(speed * 14).toFixed(1)}px)` : "";
+  return (
+    <AbsoluteFill style={{ overflow: "hidden", transform: `translateX(${tx}px)`, filter: `${look.grade}${blur}` }}>
+      <OffthreadVideo src={staticFile(src)} trimBefore={Math.round(from * fps)} muted style={{ width: "100%", height: "100%", objectFit: "cover", transform: `scale(${push})` }} />
     </AbsoluteFill>
   );
 };
@@ -881,6 +931,10 @@ const buildSfx = (cfg: ReelConfig, look: Look, r: ReturnType<typeof useReel>): S
       if (!ev.some((e) => Math.abs(e.at - c) < 0.6)) ev.push({ at: Math.max(0, c - 0.08), sfx: look.sfx.cut as SfxEvent["sfx"], volume: 0.6 });
     }
   }
+  for (const b of r.brolls) {
+    ev.push({ at: Math.max(0, b.at - 0.1), sfx: "whoosh", volume: 0.8 });
+    ev.push({ at: Math.max(0, b.to - 0.35), sfx: "whoosh", volume: 0.6 });
+  }
   if (cfg.cta) {
     ev.push({ at: Math.max(0, r.ctaAt + 0.5 - 1.25), sfx: look.sfx.riser as SfxEvent["sfx"], volume: 0.8 });
     ev.push({ at: r.ctaAt + 0.5, sfx: look.sfx.cta as SfxEvent["sfx"], volume: 1 });
@@ -894,6 +948,7 @@ const buildSfx = (cfg: ReelConfig, look: Look, r: ReturnType<typeof useReel>): S
 export const Reel: React.FC<{ cfg: ReelConfig }> = ({ cfg }) => {
   const look = { ...LOOKS[cfg.style], ...(cfg.lookOverride as Partial<Look>) } as Look;
   const r = useReel(cfg);
+  const { fps } = useVideoConfig();
   const emphasis = r.wins.filter((w) => w.c.kind === "big" || w.c.kind === "stamp").map((w) => w.from);
   // Los subtítulos se ocultan con las frases "big" y, en el estilo pop (subtítulo
   // grande en la zona baja), también con los zócalos y el CTA.
@@ -903,7 +958,13 @@ export const Reel: React.FC<{ cfg: ReelConfig }> = ({ cfg }) => {
   return (
     <AbsoluteFill style={{ background: "#000" }}>
       <Soundtrack voice={`reels/${cfg.dir}/voz.wav`} music={`reels/${cfg.dir}/musica.m4a`} segments={r.tl.SEGMENTS} events={buildSfx(cfg, look, r)} sfxDir="sfx2" />
+      {look.motionBlur && <MotionBlurDefs />}
       <TalkingHead cfg={cfg} look={look} emphasis={emphasis} />
+      {r.brolls.map((b, i) => (
+        <Sequence key={`b${i}`} from={Math.round(b.at * fps)} durationInFrames={Math.max(1, Math.round((b.to - b.at) * fps))} layout="none">
+          <BRoll src={b.src} from={b.from} dur={b.to - b.at} look={look} />
+        </Sequence>
+      ))}
       <Fx look={look} cuts={r.cuts} duration={r.duration} endCardAt={r.endCardAt} />
       <Hook cfg={cfg} look={look} />
       {r.wins.map((w, i) => (

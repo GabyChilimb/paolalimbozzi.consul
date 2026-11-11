@@ -32,6 +32,7 @@ export type Look = {
   flicker: boolean;
   letterbox: boolean;
   progress: boolean;
+  motionBlur?: boolean; // desenfoque direccional en cortes, títulos y tomas de apoyo
   endBg: string;
   endInk: string;
   sfx: { enter: string; item: string; big: string; stamp: string; cta: string; riser: string; end: string; cut?: string; note: string };
