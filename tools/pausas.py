@@ -16,7 +16,8 @@ audio = os.path.join(WORK, slug, "audio.wav")
 FPS, HOP = 30, 0.01
 REL = 18  # dB por debajo del nivel de la voz que cuentan como silencio (respiraciones incluidas)
 MIN_PAUSA = 0.16  # pausas más cortas quedan como están
-ANTES, DESPUES = 0.04, 0.07  # aire que queda antes y después de cada tramo con voz
+ANTES, DESPUES = 0.05, 0.10  # aire que queda antes y después de cada tramo con voz
+COLA, ATAQUE = 0.35, 0.15  # hasta cuánto se sigue un final / comienzo suave de palabra
 
 src = open(cfg_path).read()
 raw = src[src.index("RAW_SEGMENTS"):src.index("];", src.index("RAW_SEGMENTS"))]
@@ -38,6 +39,7 @@ idx = lambda t: min(n, max(0, int(round(t / HOP))))
 dentro = np.concatenate([db[idx(s):idx(e)] for s, e in keep])
 piso, voz = np.percentile(db, 8), np.percentile(dentro, 90)
 umbral = max(piso + 8, voz - REL)
+umbral_bajo = piso + 7
 
 snap = lambda x: round(x * FPS) / FPS
 nuevo, cortes = [], []
@@ -65,7 +67,20 @@ for s, e in keep:
     if not zonas:
         continue
     for z0, z1 in zonas:
-        c0, c1 = snap(max(s, z0 - ANTES)), snap(min(e, z1 + DESPUES))
+        # Las colas suaves de las palabras (una "l" o una "a" final) quedan por debajo del umbral:
+        # se sigue el sonido con un umbral más bajo antes de cortar, para no comerse finales.
+        k0, k1 = idx(z0), idx(z1)
+        # (salta huecos cortos: el cierre de una "t" o una "c" antes de la última sílaba)
+        fin = min(n, k1 + int(COLA / HOP))
+        suena = np.nonzero(db[k1:fin] >= umbral_bajo)[0]
+        if len(suena):
+            k1 += int(suena[-1]) + 1
+        while k0 > 0 and idx(z0) - k0 < ATAQUE / HOP and db[k0 - 1] >= umbral_bajo:
+            k0 -= 1
+        z0, z1 = k0 * HOP, k1 * HOP
+        c0, c1 = snap(max(0.0, z0 - ANTES)), snap(z1 + DESPUES)
+        if nuevo and c0 < nuevo[-1][1]:
+            c0 = nuevo[-1][1]
         if nuevo and c0 - nuevo[-1][1] < 2 / FPS:
             nuevo[-1][1] = c1
         else:
