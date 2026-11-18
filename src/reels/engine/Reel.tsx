@@ -774,21 +774,27 @@ const Hook: React.FC<{ cfg: ReelConfig; look: Look }> = ({ cfg, look }) => {
   if (t > hookTo + 0.4) return null;
   const out = 1 - prog(t, hookTo, 0.3);
   const darkBg = dark(look) && look.cardBg !== "#FFFFFF";
+  const hookTop = cfg.zones?.hook ?? 210;
+  // Si el título baja (para no tapar la cara), el fondo lo acompaña como una franja.
+  const band = hookTop > 400;
+  const c = darkBg ? "10,11,16" : "251,249,245";
   return (
     <AbsoluteFill style={{ opacity: out }}>
       <div
         style={{
           position: "absolute",
-          top: 0,
+          top: band ? hookTop - 200 : 0,
           left: 0,
           right: 0,
-          height: 820,
-          background: darkBg
-            ? "linear-gradient(to bottom, rgba(10,11,16,.85), rgba(10,11,16,.55) 50%, rgba(10,11,16,0))"
-            : "linear-gradient(to bottom, rgba(251,249,245,.92), rgba(251,249,245,.6) 55%, rgba(251,249,245,0))",
+          height: band ? 640 : 820,
+          background: band
+            ? `linear-gradient(to bottom, rgba(${c},0), rgba(${c},${darkBg ? 0.8 : 0.88}) 30%, rgba(${c},${darkBg ? 0.8 : 0.88}) 70%, rgba(${c},0))`
+            : darkBg
+              ? "linear-gradient(to bottom, rgba(10,11,16,.85), rgba(10,11,16,.55) 50%, rgba(10,11,16,0))"
+              : "linear-gradient(to bottom, rgba(251,249,245,.92), rgba(251,249,245,.6) 55%, rgba(251,249,245,0))",
         }}
       />
-      <div style={{ ...TOP_ZONE, top: cfg.zones?.hook ?? 210 }}>
+      <div style={{ ...TOP_ZONE, top: hookTop }}>
         {cfg.hook.eyebrow && <Eyebrow text={cfg.hook.eyebrow} look={look} at={0.1} color={darkBg ? look.accent : look.ink} />}
         <TitleText parts={cfg.hook.parts} at={0.15} look={look} size={look.titleUpper ? 112 : 92} color={darkBg ? "#FFFFFF" : look.ink} stagger={0.08} />
       </div>
