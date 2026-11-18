@@ -3,26 +3,27 @@ import { HANDLE } from "../handles";
 import { ReelConfig } from "../engine/types";
 
 // Academy — Congreso en São Paulo (Brasil). La fuente ya está acelerada a 1,05× y mejorada
-// (tiempos en segundos del video acelerado). Se corta el aparte del avión (29.3–31.07).
+// (tiempos en segundos del video acelerado).
 const RAW_SEGMENTS: Segment[] = [
   { start: 1.35, end: 4.6, text: "Acompañame a vivir esta experiencia tan especial." },
-  { start: 4.75, end: 7.12, text: "Me vine aquí a Brasil, a São Paulo," },
+  { start: 4.75, end: 6.45, text: "Me vine aquí a Brasil," },
+  { start: 6.5, end: 7.12, text: "a São Paulo," },
   { start: 7.12, end: 10.78, text: "para compartir experiencias en el Congreso de Medicina Estética BAM." },
   { start: 11.02, end: 13.96, text: "Estoy muy feliz de poder participar en este encuentro," },
   { start: 13.96, end: 17.84, text: "compartir conocimientos con colegas de distintos lugares del mundo" },
   { start: 17.84, end: 21.88, text: "y seguir aprendiendo de referentes de nuestra especialidad." },
   { start: 22.12, end: 25.82, text: "Voy a estar compartiendo mi experiencia, mi trabajo," },
-  { start: 25.91, end: 29.32, text: "y quiero llevarlos conmigo para que puedan vivir un poquito" },
+  { start: 25.91, end: 29.32, text: "y quiero llevarlos conmigo para que puedan vivir un poquito," },
+  { start: 29.66, end: 31.0, text: "escuchando el avión que pasa," },
   { start: 31.07, end: 34.36, text: "de todo lo que sucede detrás de escena en estos eventos." },
   { start: 34.44, end: 37.19, text: "Así que acompañame estos días," },
   { start: 37.19, end: 42.26, text: "porque voy a mostrarte todo: el congreso, los preparativos, mis amigos," },
   { start: 42.26, end: 43.92, text: "colegas y mucho más." },
 ];
 
-// KEEP: 2 tramos, 41.70s · pausas internas recortadas (tools/pausas.py) · perfil de voz "limpia"
+// KEEP: 1 tramos, 42.90s · pausas internas recortadas (tools/pausas.py) · perfil de voz "limpia"
 const KEEP: [number, number][] = [
-  [1.133, 29.567],
-  [30.767, 44.033],
+  [1.133, 44.033],
 ];
 
 export const academyCongresoBrasil: ReelConfig = {
@@ -55,6 +56,10 @@ export const academyCongresoBrasil: ReelConfig = {
   keep: KEEP,
   keywords: ["experiencia", "especial.", "Brasil,", "Paulo,", "Congreso", "feliz", "conocimientos", "mundo", "referentes", "trabajo,", "escena", "congreso,", "preparativos,", "amigos,", "colegas"],
   hook: { eyebrow: "Desde São Paulo, Brasil", parts: ["Acompañame a vivir ", { em: "esta experiencia" }], to: { word: "especial.", offset: 0.3 } },
+  stickers: [
+    { kind: "bandera-brasil", at: 6.0 },
+    { kind: "avion", at: 30.0, dur: 2.8 },
+  ],
   callouts: [
     { kind: "lower", at: { word: "Brasil" }, eyebrow: "São Paulo · Brasil", parts: ["Congreso de ", { em: "Medicina Estética" }] },
     { kind: "stamp", at: { word: "feliz" }, text: "¡Muy feliz!", icon: "heart" },

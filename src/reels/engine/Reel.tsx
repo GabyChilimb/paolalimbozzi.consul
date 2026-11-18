@@ -79,7 +79,8 @@ export const useReel = (cfg: ReelConfig) =>
     const hookTo = cfg.hook.to !== undefined ? at(cfg.hook.to) : Math.min(tl.SEGMENTS[0].end + 0.2, (wins[0]?.from ?? 99) - 0.05);
     const cuts = cfg.keep.filter((_, i) => isMajorCut(cfg.keep, i)).map(([s]) => tl.T(s));
     const brolls = (cfg.broll ?? []).map((b) => ({ src: b.src, from: b.from ?? 0, at: at(b.at), to: at(b.to) }));
-    return { tl, at, wins, endCardAt, ctaAt, hookTo, cuts, brolls, duration: endCardAt + END_HOLD };
+    const stickers = (cfg.stickers ?? []).map((st) => ({ kind: st.kind, at: at(st.at), dur: st.dur ?? (st.kind === "avion" ? 2.4 : 2.6) }));
+    return { tl, at, wins, endCardAt, ctaAt, hookTo, cuts, brolls, stickers, duration: endCardAt + END_HOLD };
   }, [cfg]);
 
 const useT = () => {
@@ -267,6 +268,72 @@ const BRoll: React.FC<{ src: string; from: number; dur: number; look: Look }> = 
     <AbsoluteFill style={{ overflow: "hidden", transform: `translateX(${tx}px)`, filter: `${look.grade}${blur}` }}>
       <OffthreadVideo src={staticFile(src)} trimBefore={Math.round(from * fps)} muted style={{ width: "100%", height: "100%", objectFit: "cover", transform: `scale(${push})` }} />
     </AbsoluteFill>
+  );
+};
+
+/* ───────────── Stickers ───────────── */
+
+const BanderaBrasil: React.FC<{ w: number }> = ({ w }) => (
+  <svg width={w} height={w * 0.7} viewBox="0 0 200 140">
+    <rect width="200" height="140" fill="#009C3B" />
+    <polygon points="100,12 188,70 100,128 12,70" fill="#FFDF00" />
+    <circle cx="100" cy="70" r="31" fill="#002776" />
+    <path d="M70 63 Q100 55 130 74" stroke="#FFFFFF" strokeWidth="6" fill="none" />
+    {[[84, 80], [96, 88], [110, 84], [118, 92], [90, 94], [104, 98]].map(([x, y], i) => (
+      <circle key={i} cx={x} cy={y} r="1.8" fill="#FFFFFF" />
+    ))}
+  </svg>
+);
+
+const Avion: React.FC<{ w: number }> = ({ w }) => (
+  <svg width={w} height={w * 0.5} viewBox="0 0 200 100">
+    <path d="M10 50 Q20 42 150 44 Q190 46 196 50 Q190 54 150 56 Q20 58 10 50 Z" fill="#FFFFFF" stroke="#1B1815" strokeWidth="3.5" />
+    <path d="M95 46 L60 6 L78 6 L125 46 Z M95 54 L60 94 L78 94 L125 54 Z" fill="#FFFFFF" stroke="#1B1815" strokeWidth="3.5" />
+    <path d="M24 47 L12 26 L22 26 L38 46 Z M24 53 L12 74 L22 74 L38 54 Z" fill="#FFFFFF" stroke="#1B1815" strokeWidth="3.5" />
+    <circle cx="178" cy="50" r="3" fill="#4A93A8" />
+  </svg>
+);
+
+const Sticker: React.FC<{ kind: "bandera-brasil" | "avion"; dur: number; look: Look }> = ({ kind, dur, look }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const t = frame / fps;
+  if (kind === "avion") {
+    // Cruza la pantalla de izquierda a derecha con estela y motion blur.
+    const k = Math.min(1, t / dur);
+    const x = -380 + (1080 + 760) * Easing.inOut(Easing.sin)(k);
+    const speed = Math.sin(Math.PI * k);
+    const y = 250 - 70 * k + 12 * Math.sin(k * 9);
+    return (
+      <AbsoluteFill style={{ pointerEvents: "none" }}>
+        <div style={{ position: "absolute", left: x - 560, top: y + 76, width: 560, height: 8, borderRadius: 3, background: "linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,.85))", opacity: 0.9 }} />
+        <div style={{ position: "absolute", left: x, top: y, transform: `rotate(${-6 + 4 * Math.sin(k * 6)}deg)`, filter: `drop-shadow(0 10px 16px rgba(0,0,0,.45))${look.motionBlur ? mb("x", speed * 0.2) : ""}` }}>
+          <Avion w={320} />
+        </div>
+      </AbsoluteFill>
+    );
+  }
+  // Bandera: entra con rebote, flamea y se va achicándose.
+  const pIn = springy(t, 0);
+  const pOut = prog(t, dur - 0.35, 0.35);
+  const wave = Math.sin(t * 6) * 3;
+  return (
+    <div
+      style={{
+        position: "absolute",
+        left: 770,
+        top: 300,
+        transform: `scale(${Math.max(0, Math.min(1.08, pIn) * (1 - pOut))}) rotate(${8 + wave * 0.6}deg) skewY(${wave * 0.5}deg)`,
+        transformOrigin: "center",
+        padding: 10,
+        background: "#FFFFFF",
+        borderRadius: 14,
+        boxShadow: "0 14px 30px rgba(0,0,0,.28)",
+        lineHeight: 0,
+      }}
+    >
+      <BanderaBrasil w={230} />
+    </div>
   );
 };
 
@@ -937,6 +1004,9 @@ const buildSfx = (cfg: ReelConfig, look: Look, r: ReturnType<typeof useReel>): S
       if (!ev.some((e) => Math.abs(e.at - c) < 0.6)) ev.push({ at: Math.max(0, c - 0.08), sfx: look.sfx.cut as SfxEvent["sfx"], volume: 0.6 });
     }
   }
+  for (const st of r.stickers) {
+    ev.push({ at: st.at, sfx: st.kind === "avion" ? "whoosh" : "pop", volume: st.kind === "avion" ? 0.7 : 0.85 });
+  }
   for (const b of r.brolls) {
     ev.push({ at: Math.max(0, b.at - 0.1), sfx: "whoosh", volume: 0.8 });
     ev.push({ at: Math.max(0, b.to - 0.35), sfx: "whoosh", volume: 0.6 });
@@ -972,6 +1042,11 @@ export const Reel: React.FC<{ cfg: ReelConfig }> = ({ cfg }) => {
         </Sequence>
       ))}
       <Fx look={look} cuts={r.cuts} duration={r.duration} endCardAt={r.endCardAt} />
+      {r.stickers.map((st, i) => (
+        <Sequence key={`s${i}`} from={Math.round(st.at * fps)} durationInFrames={Math.round(st.dur * fps)} layout="none">
+          <Sticker kind={st.kind} dur={st.dur} look={look} />
+        </Sequence>
+      ))}
       <Hook cfg={cfg} look={look} />
       {r.wins.map((w, i) => (
         <CalloutView key={i} w={w} look={look} cfg={cfg} />

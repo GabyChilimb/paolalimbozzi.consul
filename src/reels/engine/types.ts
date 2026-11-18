@@ -48,6 +48,8 @@ export type ReelConfig = {
   keywords?: string[]; // palabras que se colorean en los subtítulos
   hook: { eyebrow?: string; parts: Part[]; to?: Anchor };
   callouts: Callout[];
+  // Stickers animados fuera de las tarjetas (no cortan la duración de los callouts).
+  stickers?: { kind: "bandera-brasil" | "avion"; at: Anchor; dur?: number }[];
   // Tomas de apoyo a pantalla completa (la voz sigue): archivo en public/, desde qué segundo del archivo.
   broll?: { src: string; at: Anchor; to: Anchor; from?: number }[];
   cta?: { at: Anchor; kicker: string; button: string; sub?: string };
