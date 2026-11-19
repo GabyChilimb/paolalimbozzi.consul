@@ -7,7 +7,7 @@ import { FPS, HEIGHT, WIDTH } from "./Bioestimuladores/theme";
 import { DURATION_SECONDS as TRAYECTORIA_SECONDS, Trayectoria } from "./Trayectoria";
 import { DURATION_SECONDS as MEDIDA_SECONDS, MedidaJusta } from "./MedidaJusta";
 import { ReelCompositions } from "./reels";
-import { PcCompositions } from "./pc/FotoAnimada";
+import { PcCompositions } from "./pc/PcProducto";
 
 // Each <Composition> is an entry in the sidebar!
 
