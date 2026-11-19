@@ -15,7 +15,7 @@ import { InstagramGlyph } from "../../lib/brand";
 import { Soundtrack, SfxEvent } from "../../lib/Soundtrack";
 import { makeTimeline } from "../../lib/timeline";
 import { Look, LOOKS } from "./styles";
-import { Anchor, Callout, Part, ReelConfig } from "./types";
+import { Anchor, Callout, Part, ReelConfig, StickerKind } from "./types";
 
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 const ease = Easing.bezier(0.22, 1, 0.36, 1);
@@ -79,7 +79,7 @@ export const useReel = (cfg: ReelConfig) =>
     const hookTo = cfg.hook.to !== undefined ? at(cfg.hook.to) : Math.min(tl.SEGMENTS[0].end + 0.2, (wins[0]?.from ?? 99) - 0.05);
     const cuts = cfg.keep.filter((_, i) => isMajorCut(cfg.keep, i)).map(([s]) => tl.T(s));
     const brolls = (cfg.broll ?? []).map((b) => ({ src: b.src, from: b.from ?? 0, at: at(b.at), to: at(b.to) }));
-    const stickers = (cfg.stickers ?? []).map((st) => ({ kind: st.kind, at: at(st.at), dur: st.dur ?? (st.kind === "avion" ? 2.4 : 2.6) }));
+    const stickers = (cfg.stickers ?? []).map((st) => ({ kind: st.kind, pos: st.pos, at: at(st.at), dur: st.dur ?? (st.kind === "avion" ? 2.4 : 2.6) }));
     return { tl, at, wins, endCardAt, ctaAt, hookTo, cuts, brolls, stickers, duration: endCardAt + END_HOLD };
   }, [cfg]);
 
@@ -285,6 +285,51 @@ const BanderaBrasil: React.FC<{ w: number }> = ({ w }) => (
   </svg>
 );
 
+const BanderaArgentina: React.FC<{ w: number }> = ({ w }) => (
+  <svg width={w} height={w * 0.64} viewBox="0 0 200 128">
+    <rect width="200" height="128" fill="#FFFFFF" />
+    <rect width="200" height="42.7" fill="#74ACDF" />
+    <rect y="85.3" width="200" height="42.7" fill="#74ACDF" />
+    <g transform="translate(100 64)">
+      {Array.from({ length: 16 }, (_, i) => (
+        <rect key={i} x="-1.6" y="-17" width="3.2" height="8" fill="#F6B40E" transform={`rotate(${i * 22.5})`} />
+      ))}
+      <circle r="8.5" fill="#F6B40E" stroke="#85340A" strokeWidth="1" />
+    </g>
+  </svg>
+);
+
+const BanderaCorea: React.FC<{ w: number }> = ({ w }) => {
+  // Trigramas simplificados: barras enteras o partidas.
+  const trigrama = (x: number, y: number, rot: number, partes: boolean[]) => (
+    <g transform={`translate(${x} ${y}) rotate(${rot})`}>
+      {partes.map((partida, i) =>
+        partida ? (
+          <g key={i}>
+            <rect x={-12} y={-11 + i * 8} width={10.5} height={5} fill="#000" />
+            <rect x={1.5} y={-11 + i * 8} width={10.5} height={5} fill="#000" />
+          </g>
+        ) : (
+          <rect key={i} x={-12} y={-11 + i * 8} width={24} height={5} fill="#000" />
+        ),
+      )}
+    </g>
+  );
+  return (
+    <svg width={w} height={w * (2 / 3)} viewBox="0 0 200 133">
+      <rect width="200" height="133" fill="#FFFFFF" />
+      <g transform="translate(100 66.5) rotate(33.7)">
+        <path d="M-25 0 A25 25 0 0 1 25 0 A12.5 12.5 0 0 1 0 0 A12.5 12.5 0 0 0 -25 0 Z" fill="#CD2E3A" />
+        <path d="M25 0 A25 25 0 0 1 -25 0 A12.5 12.5 0 0 1 0 0 A12.5 12.5 0 0 0 25 0 Z" fill="#0047A0" />
+      </g>
+      {trigrama(42, 30, -56.3, [false, false, false])}
+      {trigrama(158, 103, -56.3, [true, true, true])}
+      {trigrama(158, 30, 56.3, [true, false, true])}
+      {trigrama(42, 103, 56.3, [false, true, false])}
+    </svg>
+  );
+};
+
 const Avion: React.FC<{ w: number }> = ({ w }) => (
   <svg width={w} height={w * 0.5} viewBox="0 0 200 100">
     <path d="M10 50 Q20 42 150 44 Q190 46 196 50 Q190 54 150 56 Q20 58 10 50 Z" fill="#FFFFFF" stroke="#1B1815" strokeWidth="3.5" />
@@ -294,7 +339,7 @@ const Avion: React.FC<{ w: number }> = ({ w }) => (
   </svg>
 );
 
-const Sticker: React.FC<{ kind: "bandera-brasil" | "avion"; dur: number; look: Look }> = ({ kind, dur, look }) => {
+const Sticker: React.FC<{ kind: StickerKind; dur: number; look: Look; pos?: { x: number; y: number } }> = ({ kind, dur, look, pos }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const t = frame / fps;
@@ -321,8 +366,8 @@ const Sticker: React.FC<{ kind: "bandera-brasil" | "avion"; dur: number; look: L
     <div
       style={{
         position: "absolute",
-        left: 770,
-        top: 300,
+        left: pos?.x ?? 770,
+        top: pos?.y ?? 300,
         transform: `scale(${Math.max(0, Math.min(1.08, pIn) * (1 - pOut))}) rotate(${8 + wave * 0.6}deg) skewY(${wave * 0.5}deg)`,
         transformOrigin: "center",
         padding: 10,
@@ -332,7 +377,7 @@ const Sticker: React.FC<{ kind: "bandera-brasil" | "avion"; dur: number; look: L
         lineHeight: 0,
       }}
     >
-      <BanderaBrasil w={230} />
+      {kind === "bandera-corea" ? <BanderaCorea w={230} /> : kind === "bandera-argentina" ? <BanderaArgentina w={230} /> : <BanderaBrasil w={230} />}
     </div>
   );
 };
@@ -1044,7 +1089,7 @@ export const Reel: React.FC<{ cfg: ReelConfig }> = ({ cfg }) => {
       <Fx look={look} cuts={r.cuts} duration={r.duration} endCardAt={r.endCardAt} />
       {r.stickers.map((st, i) => (
         <Sequence key={`s${i}`} from={Math.round(st.at * fps)} durationInFrames={Math.round(st.dur * fps)} layout="none">
-          <Sticker kind={st.kind} dur={st.dur} look={look} />
+          <Sticker kind={st.kind} dur={st.dur} look={look} pos={st.pos} />
         </Sequence>
       ))}
       <Hook cfg={cfg} look={look} />

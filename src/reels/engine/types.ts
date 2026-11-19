@@ -28,6 +28,8 @@ export type Callout =
   // Círculo/mira sobre la cara (x, y en px del cuadro 1080×1920).
   | { kind: "target"; at: Anchor; to?: Anchor; x: number; y: number; label: string };
 
+export type StickerKind = "bandera-brasil" | "bandera-corea" | "bandera-argentina" | "avion";
+
 export type StyleName = "clinica" | "editorial" | "pop" | "noche" | "anotador" | "academia" | "bruja" | "calido" | "kennedy";
 
 export type ReelConfig = {
@@ -49,7 +51,7 @@ export type ReelConfig = {
   hook: { eyebrow?: string; parts: Part[]; to?: Anchor };
   callouts: Callout[];
   // Stickers animados fuera de las tarjetas (no cortan la duración de los callouts).
-  stickers?: { kind: "bandera-brasil" | "avion"; at: Anchor; dur?: number }[];
+  stickers?: { kind: StickerKind; at: Anchor; dur?: number; pos?: { x: number; y: number } }[];
   // Tomas de apoyo a pantalla completa (la voz sigue): archivo en public/, desde qué segundo del archivo.
   broll?: { src: string; at: Anchor; to: Anchor; from?: number }[];
   cta?: { at: Anchor; kicker: string; button: string; sub?: string };
