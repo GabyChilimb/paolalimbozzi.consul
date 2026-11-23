@@ -30,7 +30,7 @@ export const preparativos: MontajeConfig = {
       tomas: [{ foto: "117", mov: "in", foco: { x: 0.5, y: 0.5 } }, { foto: "036", mov: "izq" }],
     },
     { dur: 2.0, tomas: [{ clip: "02-lento", desde: 7 }], titulo: { lineas: [{ t: "Check-in", estilo: "contorno", tam: 104 }, { t: "listo", estilo: "chico" }], y: 760 } },
-    { dur: 1.8, tomas: [{ foto: "008", mov: "in" }, { foto: "040", mov: "der" }] },
+    { dur: 1.8, tomas: [{ foto: "023", mov: "in" }, { foto: "040", mov: "der" }] },
     {
       voz: { src: "c04.wav", desde: 0.2, hasta: 8.0, texto: "Está como para pecar con todo, ¿no? Imagínense que llevo tres días." },
       tomas: [{ clip: "04", desde: 0.2, mov: "in" }],
@@ -38,8 +38,8 @@ export const preparativos: MontajeConfig = {
     },
     {
       dur: 2.6,
-      tomas: [{ clip: "21", desde: 22, dur: 1.4 }, { foto: "049", mov: "out" }],
-      titulo: { lineas: [{ t: "El equipo", estilo: "fuerte" }, { t: "en la valija", estilo: "neon", tam: 90 }], y: 700 },
+      tomas: [{ clip: "21", desde: 22, dur: 1.4 }, { foto: "099", mov: "in" }],
+      titulo: { lineas: [{ t: "El equipo", estilo: "fuerte" }, { t: "en la valija", estilo: "neon", tam: 90 }], y: 1160 },
     },
     {
       dur: 2.2,
@@ -65,7 +65,7 @@ export const elCongreso: MontajeConfig = {
   tramos: [
     {
       voz: { src: "A.wav", desde: 39.36, hasta: 40.12, texto: "El congreso," },
-      tomas: [{ foto: "018", mov: "in" }],
+      tomas: [{ foto: "017", mov: "in" }],
       titulo: { lineas: [{ t: "El", estilo: "fuerte" }, { t: "Congreso", estilo: "serifNeon", tam: 150 }], y: 820, dur: 2.4 },
     },
     { dur: 2.2, tomas: [{ clip: "15-lento", desde: 2 }] },
@@ -90,7 +90,7 @@ export const elCongreso: MontajeConfig = {
       tomas: [{ foto: "095", mov: "in" }],
       titulo: { lineas: [{ t: "Una sala", estilo: "fuerte" }, { t: "llena", estilo: "contorno", tam: 120 }], y: 1150 },
     },
-    { dur: 2.4, tomas: [{ clip: "03-lento", desde: 1 }, { foto: "091", mov: "in" }] },
+    { dur: 2.4, tomas: [{ foto: "100", mov: "in" }, { foto: "091", mov: "in" }] },
     {
       voz: { src: "A.wav", desde: 17.84, hasta: 21.88, texto: "y seguir aprendiendo de referentes de nuestra especialidad." },
       tomas: [{ foto: "031", mov: "in" }, { foto: "035", mov: "out" }, { foto: "055", mov: "in" }],
