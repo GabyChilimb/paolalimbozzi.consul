@@ -300,7 +300,7 @@ export const Montaje: React.FC<{ cfg: MontajeConfig }> = ({ cfg }) => {
   plan.tomas.forEach((x, i) => i > 0 && sfx.push({ at: Math.max(0, x.from - 0.08), s: i % 2 ? "whoosh" : "swoosh", v: 0.1 }));
   plan.titulos.forEach((ti) => sfx.push({ at: ti.from, s: "pop", v: 0.13 }));
   sfx.push({ at: plan.finTomas, s: "sting", v: 0.16 });
-  // Música muy de fondo: baja un poco más mientras hay voz (con rampas, sin saltos).
+  // Música de fondo: baja bastante mientras habla alguien en los clips (con rampas, sin saltos).
   const duck = (tt: number) =>
     plan.voces.reduce((m, v) => {
       const fin = v.from + (v.hasta - v.desde);
@@ -339,7 +339,7 @@ export const Montaje: React.FC<{ cfg: MontajeConfig }> = ({ cfg }) => {
         volume={(f) => {
           const tt = f / fps;
           const fin = interpolate(tt, [plan.total - 1.2, plan.total], [1, 0], clamp);
-          return (0.13 - 0.06 * duck(tt)) * fin;
+          return (0.32 - 0.24 * duck(tt)) * fin;
         }}
       />
       {sfx.map((e, i) => (
