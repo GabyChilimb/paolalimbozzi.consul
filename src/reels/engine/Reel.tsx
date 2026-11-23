@@ -30,7 +30,7 @@ export const END_HOLD = 3.2;
 
 /* Motion blur direccional: filtros SVG con desenfoque en un solo eje. */
 const MB_LEVELS = 8;
-const MotionBlurDefs: React.FC = () => (
+export const MotionBlurDefs: React.FC = () => (
   <svg width={0} height={0} style={{ position: "absolute" }}>
     <defs>
       {Array.from({ length: MB_LEVELS }, (_, i) => (
@@ -47,7 +47,7 @@ const MotionBlurDefs: React.FC = () => (
   </svg>
 );
 // amount 0..1 → filtro url() del nivel correspondiente (o vacío si es casi nulo).
-const mb = (axis: "x" | "y", amount: number) => {
+export const mb = (axis: "x" | "y", amount: number) => {
   const lvl = Math.round(Math.min(1, Math.max(0, amount)) * MB_LEVELS);
   return lvl > 0 ? ` url(#mb${axis}${lvl})` : "";
 };

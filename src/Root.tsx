@@ -8,6 +8,7 @@ import { DURATION_SECONDS as TRAYECTORIA_SECONDS, Trayectoria } from "./Trayecto
 import { DURATION_SECONDS as MEDIDA_SECONDS, MedidaJusta } from "./MedidaJusta";
 import { ReelCompositions } from "./reels";
 import { PcCompositions } from "./pc/PcProducto";
+import { MontajeCompositions } from "./montaje";
 
 // Each <Composition> is an entry in the sidebar!
 
@@ -16,6 +17,7 @@ export const RemotionRoot: React.FC = () => {
     <>
       <ReelCompositions />
       <PcCompositions />
+      <MontajeCompositions />
       <Composition
         id="MedidaJusta"
         component={MedidaJusta}

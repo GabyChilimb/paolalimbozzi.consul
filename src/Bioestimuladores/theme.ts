@@ -26,6 +26,8 @@ const FONTS: [string, string, string, string][] = [
   ["Anton", "Anton.woff2", "normal", "400"],
   ["Caveat", "Caveat.woff2", "normal", "400 700"],
   ["Creepster", "Creepster.woff2", "normal", "400"],
+  ["Montserrat", "Montserrat.woff2", "normal", "100 900"],
+  ["Montserrat", "Montserrat-Italic.woff2", "italic", "100 900"],
 ];
 
 if (typeof document !== "undefined") {
@@ -52,6 +54,7 @@ export const sans = "Inter, Helvetica, Arial, sans-serif";
 export const mono = '"IBM Plex Mono", monospace';
 export const display = "Anton, Impact, sans-serif";
 export const hand = "Caveat, cursive";
+export const bold = "Montserrat, Inter, Arial, sans-serif";
 export const spooky = "Creepster, Anton, sans-serif";
 
 export const FPS = 30;
