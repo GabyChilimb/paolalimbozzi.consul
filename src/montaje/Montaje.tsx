@@ -339,7 +339,7 @@ export const Montaje: React.FC<{ cfg: MontajeConfig }> = ({ cfg }) => {
         volume={(f) => {
           const tt = f / fps;
           const fin = interpolate(tt, [plan.total - 1.2, plan.total], [1, 0], clamp);
-          return (0.32 - 0.24 * duck(tt)) * fin;
+          return (1.0 - 0.82 * duck(tt)) * fin;
         }}
       />
       {sfx.map((e, i) => (
