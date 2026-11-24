@@ -161,8 +161,8 @@ export const amigosColegas: MontajeConfig = {
       titulo: { lineas: [{ t: "De todo", estilo: "fuerte", tam: 80 }, { t: "el mundo", estilo: "serifNeon", tam: 130 }], at: 1.6, y: 700 },
     },
     {
-      dur: 3.4,
-      tomas: [{ clip: "05-lento", desde: 2, dur: 2.0 }, { foto: "022", mov: "in" }],
+      dur: 4.8,
+      tomas: [{ clip: "05-lento", desde: 2, dur: 1.5 }, { foto: "131", dur: 2.2, mov: "out", foco: { x: 0.5, y: 0.62 } }, { foto: "022", mov: "in" }],
       titulo: { lineas: [{ t: "Cenas", estilo: "fuerte" }, { t: "inolvidables", estilo: "neon", tam: 100 }], y: 700 },
     },
     {
